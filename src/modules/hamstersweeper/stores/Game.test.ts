@@ -1,4 +1,4 @@
-import Game, { GameContext } from "@/modules/hamstersweeper/stores/Game";
+import Game from "@/modules/hamstersweeper/stores/Game";
 
 function getRealMineCount(game: Game) {
   let realMineCount = 0;
