@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 import { GameContext } from "@/modules/hamstersweeper/stores/Game";
 import CellView from "@/modules/hamstersweeper/components/CellView";
 
-const BoardView = () => {
+const BoardView = observer(() => {
   const game = useContext(GameContext);
 
   return (
@@ -20,6 +20,6 @@ const BoardView = () => {
       ))}
     </div>
   );
-};
+});
 
-export default observer(BoardView);
+export default BoardView;

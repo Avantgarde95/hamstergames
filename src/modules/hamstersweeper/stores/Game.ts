@@ -3,6 +3,13 @@
 import { createContext } from "react";
 import { action, makeObservable, observable } from "mobx";
 
+import { createMatrix } from "@/common/utils/MathUtils";
+
+interface Position {
+  x: number;
+  y: number;
+}
+
 export interface Cell {
   hasMine: boolean;
   neighborMineCount: number;
@@ -21,38 +28,40 @@ export default class Game {
   isGameOver: boolean;
 
   private isFirstOpen: boolean;
+  private readonly neighbors: Array<Array<Array<Position>>>;
 
   constructor(args: { boardWidth: number; boardHeight: number; mineCount: number }) {
     this.boardWidth = args.boardWidth;
     this.boardHeight = args.boardHeight;
     this.mineCount = args.mineCount;
 
-    this.board = [];
-
-    for (let y = 0; y < this.boardHeight; y++) {
-      const row: Array<Cell> = [];
-
-      for (let x = 0; x < this.boardWidth; x++) {
-        row.push({
-          hasMine: false,
-          neighborMineCount: 0,
-          isOpen: false,
-          isFlagged: false,
-        });
-      }
-
-      this.board.push(row);
-    }
+    this.board = createMatrix({
+      width: this.boardWidth,
+      height: this.boardHeight,
+      initialValue: () => ({
+        hasMine: false,
+        neighborMineCount: 0,
+        isOpen: false,
+        isFlagged: false,
+      }),
+    });
 
     this.isFirstOpen = true;
     this.isGameOver = false;
+
+    this.neighbors = createMatrix({
+      width: this.boardWidth,
+      height: this.boardHeight,
+      initialValue: position => this.getNeighbors(position),
+    });
 
     makeObservable(this);
   }
 
   @action
-  openCell(position: { x: number; y: number }) {
-    this.board[position.y][position.x].isOpen = true;
+  openCell(position: Position) {
+    const cell = this.board[position.y][position.x];
+    cell.isOpen = true;
 
     if (this.isFirstOpen) {
       this.isFirstOpen = false;
@@ -60,19 +69,68 @@ export default class Game {
       console.log("Generated the mines!");
     }
 
-    if (this.board[position.y][position.x].hasMine) {
+    if (cell.hasMine) {
       this.isGameOver = true;
       console.log("Game over!");
+      return;
+    }
+
+    if (cell.neighborMineCount <= 0) {
+      const emptyCells = this.getConnectedEmptyCells(position);
+
+      for (const eachPosition of emptyCells) {
+        this.board[eachPosition.y][eachPosition.x].isOpen = true;
+      }
     }
   }
 
+  private getConnectedEmptyCells(position: Position) {
+    const isChecked: Array<Array<boolean>> = [];
+
+    for (let y = 0; y < this.boardHeight; y++) {
+      const row: Array<boolean> = [];
+
+      for (let x = 0; x < this.boardWidth; x++) {
+        row.push(false);
+      }
+
+      isChecked.push(row);
+    }
+
+    isChecked[position.y][position.x] = true;
+
+    // Stack-based DFS.
+    const stack: Array<Position> = [position];
+    const result: Array<Position> = [];
+
+    while (stack.length > 0) {
+      const currentPosition = stack.pop()!;
+      result.push(currentPosition);
+
+      for (const neighbor of this.neighbors[currentPosition.y][currentPosition.x]) {
+        if (this.board[neighbor.y][neighbor.x].neighborMineCount > 0) {
+          continue;
+        }
+
+        if (isChecked[neighbor.y][neighbor.x]) {
+          continue;
+        }
+
+        stack.push(neighbor);
+        isChecked[neighbor.y][neighbor.x] = true;
+      }
+    }
+
+    return result;
+  }
+
   @action
-  markCell(args: { x: number; y: number }) {
+  markCell(args: Position) {
     this.board[args.y][args.x].isFlagged = !this.board[args.y][args.x].isFlagged;
   }
 
   @action
-  private generateMines(exclude: { x: number; y: number }) {
+  private generateMines(exclude: Position) {
     // (1) Create (w * h - 1) sized array.
     const hasMine: Array<boolean> = [];
 
@@ -97,16 +155,14 @@ export default class Game {
 
         this.board[y][x].hasMine = true;
 
-        const neighbors = this.getNeighbors({ x, y });
-
-        for (const neighbor of neighbors) {
+        for (const neighbor of this.neighbors[y][x]) {
           this.board[neighbor.y][neighbor.x].neighborMineCount++;
         }
       }
     }
   }
 
-  private getNeighbors(position: { x: number; y: number }) {
+  private getNeighbors(position: Position) {
     const diffs = [
       [0, 1],
       [0, -1],

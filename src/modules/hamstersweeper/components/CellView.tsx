@@ -3,7 +3,11 @@
 import { MouseEvent, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
-import { Cell, GameContext } from "@/modules/hamstersweeper/stores/Game";
+import { GameContext } from "@/modules/hamstersweeper/stores/Game";
+
+const Mine = () => <span className="text-sm">🐹</span>;
+
+const Flag = () => <span className="text-sm">🧀</span>;
 
 const numberStyles = [
   "text-[#0000F5]",
@@ -16,28 +20,24 @@ const numberStyles = [
   "text-[#757575]",
 ];
 
-interface CellContentProps {
-  cell: Cell;
+interface NumberViewProps {
+  value: number;
 }
 
-const CellContent = ({ cell }: CellContentProps) => {
-  if (cell.hasMine) {
-    return <span className="text-sm">🐹</span>;
-  }
-
-  if (cell.neighborMineCount <= 0) {
+const NumberView = ({ value }: NumberViewProps) => {
+  if (value <= 0) {
     return null;
   }
 
-  return <span className={`text-base ${numberStyles[cell.neighborMineCount - 1]}`}>{cell.neighborMineCount}</span>;
+  return <span className={`text-base ${numberStyles[value - 1]}`}>{value}</span>;
 };
 
-interface CellViewProps {
+interface CommonProps {
   x: number;
   y: number;
 }
 
-const CellView = ({ x, y }: CellViewProps) => {
+const Button = observer(({ x, y }: CommonProps) => {
   const game = useContext(GameContext);
   const cell = game.board[y][x];
 
@@ -51,22 +51,38 @@ const CellView = ({ x, y }: CellViewProps) => {
   };
 
   return (
+    <button
+      className="border-outset flex h-full w-full flex-row items-center justify-center border-2 bg-[#c0c0c0] active:opacity-0"
+      onClick={handleClick}
+      onContextMenu={handleRightClick}
+    >
+      {cell.isFlagged && <Flag />}
+    </button>
+  );
+});
+
+const BeforeGameOver = observer(({ x, y }: CommonProps) => {
+  const game = useContext(GameContext);
+  const cell = game.board[y][x];
+
+  return cell.isOpen ? <NumberView value={cell.neighborMineCount} /> : <Button x={x} y={y} />;
+});
+
+const AfterGameOver = observer(({ x, y }: CommonProps) => {
+  const game = useContext(GameContext);
+  const cell = game.board[y][x];
+
+  return cell.hasMine ? <Mine /> : <NumberView value={cell.neighborMineCount} />;
+});
+
+const CellView = observer(({ x, y }: CommonProps) => {
+  const game = useContext(GameContext);
+
+  return (
     <div className="flex h-6 w-6 flex-row items-center justify-center border-[1px] border-solid border-[#818181] bg-[#bababa]">
-      {game.isGameOver ? (
-        <CellContent cell={cell} />
-      ) : (
-        !cell.isOpen && (
-          <button
-            className="border-outset flex h-full w-full flex-row items-center justify-center border-2 bg-[#c0c0c0] text-sm active:opacity-0"
-            onClick={handleClick}
-            onContextMenu={handleRightClick}
-          >
-            {cell.isFlagged && "🧀"}
-          </button>
-        )
-      )}
+      {game.isGameOver ? <AfterGameOver x={x} y={y} /> : <BeforeGameOver x={x} y={y} />}
     </div>
   );
-};
+});
 
-export default observer(CellView);
+export default CellView;
