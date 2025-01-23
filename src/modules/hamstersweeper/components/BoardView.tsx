@@ -10,7 +10,7 @@ const BoardView = observer(() => {
   const game = useContext(GameContext);
 
   return (
-    <div className="flex flex-col">
+    <div className="border-inset flex flex-col border-4">
       {game.board.map((row, y) => (
         <div key={y} className="flex flex-row">
           {row.map((cell, x) => (

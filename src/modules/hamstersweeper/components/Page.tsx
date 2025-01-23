@@ -7,9 +7,11 @@ const Page = () => {
   const game = new Game({ boardWidth: 8, boardHeight: 6, mineCount: 6 });
 
   return (
-    <GameContext.Provider value={game}>
-      <BoardView />
-    </GameContext.Provider>
+    <div className="flex h-full w-full flex-row items-center">
+      <GameContext.Provider value={game}>
+        <BoardView />
+      </GameContext.Provider>
+    </div>
   );
 };
 

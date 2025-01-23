@@ -76,15 +76,15 @@ export default class Game {
     }
 
     if (cell.neighborMineCount <= 0) {
-      const emptyCells = this.getConnectedEmptyCells(position);
+      const connectedCells = this.walkUntilNotZero(position);
 
-      for (const eachPosition of emptyCells) {
+      for (const eachPosition of connectedCells) {
         this.board[eachPosition.y][eachPosition.x].isOpen = true;
       }
     }
   }
 
-  private getConnectedEmptyCells(position: Position) {
+  private walkUntilNotZero(position: Position) {
     const isChecked: Array<Array<boolean>> = [];
 
     for (let y = 0; y < this.boardHeight; y++) {
@@ -107,17 +107,23 @@ export default class Game {
       const currentPosition = stack.pop()!;
       result.push(currentPosition);
 
-      for (const neighbor of this.neighbors[currentPosition.y][currentPosition.x]) {
-        if (this.board[neighbor.y][neighbor.x].neighborMineCount > 0) {
-          continue;
-        }
+      // If count > 0, stop walking.
+      if (this.board[currentPosition.y][currentPosition.x].neighborMineCount > 0) {
+        continue;
+      }
 
+      for (const neighbor of this.neighbors[currentPosition.y][currentPosition.x]) {
         if (isChecked[neighbor.y][neighbor.x]) {
           continue;
         }
 
-        stack.push(neighbor);
         isChecked[neighbor.y][neighbor.x] = true;
+
+        if (this.board[neighbor.y][neighbor.x].hasMine) {
+          continue;
+        }
+
+        stack.push(neighbor);
       }
     }
 
