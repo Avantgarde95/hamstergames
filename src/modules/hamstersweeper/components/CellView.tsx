@@ -29,7 +29,7 @@ const NumberView = ({ value }: NumberViewProps) => {
     return null;
   }
 
-  return <span className={`text-base ${numberStyles[value - 1]}`}>{value}</span>;
+  return <span className={`font-mono text-base ${numberStyles[value - 1]}`}>{value}</span>;
 };
 
 interface CommonProps {

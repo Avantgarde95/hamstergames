@@ -28,7 +28,7 @@ const Layout = ({ children }: CommonChildrenProps) => (
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet" />
     </head>
-    <body className="m-0 h-full w-full p-0">
+    <body className="m-0 h-full w-full p-0 font-sans">
       <NextTopLoader />
       <div className="h-full w-full overflow-y-auto">{children}</div>
     </body>
