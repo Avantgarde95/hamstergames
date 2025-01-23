@@ -18,12 +18,12 @@ const Page = observer(() => {
 
   useEffect(() => {
     if (game.isGameOver) {
-      timer.pause();
+      timer.stop();
     }
   }, [timer, game.isGameOver]);
 
   return (
-    <div className="flex h-full w-full flex-row items-center justify-center">
+    <div className="flex h-full w-full flex-row items-center justify-center overflow-auto p-4">
       <div className="border-outset border-4 bg-[#C0C0C0] p-2">
         <div className="border-inset mb-1 flex flex-row justify-between border-4 p-1">
           <Counter value={0} />

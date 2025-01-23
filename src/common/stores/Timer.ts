@@ -41,17 +41,11 @@ export default class Timer {
     }, this.interval);
   }
 
-  pause() {
+  stop() {
     if (this.job !== null) {
       window.clearInterval(this.job);
       this.job = null;
     }
-  }
-
-  @action
-  reset() {
-    this.startTime = 0;
-    this.time = 0;
   }
 
   private getNow() {

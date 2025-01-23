@@ -52,7 +52,7 @@ const Button = observer(({ x, y }: CommonProps) => {
 
   return (
     <button
-      className="border-outset flex h-full w-full flex-row items-center justify-center border-2 bg-[#c0c0c0] active:opacity-0"
+      className="border-outset flex h-full w-full flex-row items-center justify-center overflow-hidden border-2 bg-[#c0c0c0] active:opacity-0"
       onClick={handleClick}
       onContextMenu={handleRightClick}
     >
@@ -79,7 +79,7 @@ const CellView = observer(({ x, y }: CommonProps) => {
   const game = useContext(GameContext);
 
   return (
-    <div className="flex h-6 w-6 flex-row items-center justify-center border-[1px] border-solid border-[#818181] bg-[#bababa]">
+    <div className="flex h-6 w-6 flex-row items-center justify-center overflow-hidden border-[1px] border-solid border-[#818181] bg-[#bababa]">
       {game.isGameOver ? <AfterGameOver x={x} y={y} /> : <BeforeGameOver x={x} y={y} />}
     </div>
   );
