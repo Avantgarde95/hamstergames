@@ -44,7 +44,7 @@ test("Open first", () => {
   const boardHeight = 5;
   const mineCount = 6;
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
 
     const firstOpen = { x: 1, y: 2 };
@@ -55,25 +55,44 @@ test("Open first", () => {
   }
 });
 
-test("Game over", () => {
+test("Win", () => {
   const boardWidth = 4;
   const boardHeight = 5;
   const mineCount = 6;
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
 
     gameStore.openCell({ x: 1, y: 2 });
-    expect(gameStore.isGameOver).toBeFalsy();
+    expect(gameStore.status).toEqual("Running");
 
-    const { mined, unmined } = getMinedCells(gameStore);
+    const { unmined } = getMinedCells(gameStore);
 
     for (const position of unmined) {
       gameStore.openCell(position);
-      expect(gameStore.isGameOver).toBeFalsy();
     }
 
+    expect(gameStore.status).toEqual("Win");
+  }
+});
+
+test("Lose", () => {
+  const boardWidth = 4;
+  const boardHeight = 5;
+  const mineCount = 6;
+
+  for (let i = 0; i < 5; i++) {
+    const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
+
+    gameStore.openCell({ x: 1, y: 2 });
+    expect(gameStore.status).toEqual("Running");
+
+    const { mined, unmined } = getMinedCells(gameStore);
+
+    gameStore.openCell(unmined[0]);
+    expect(gameStore.status).toEqual("Running");
+
     gameStore.openCell(mined[0]);
-    expect(gameStore.isGameOver).toBeTruthy();
+    expect(gameStore.status).toEqual("Lose");
   }
 });

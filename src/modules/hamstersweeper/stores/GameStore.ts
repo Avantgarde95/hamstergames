@@ -25,9 +25,12 @@ export default class GameStore {
   @observable
   board: Array<Array<Cell>> = [];
   @observable
-  isGameOver: boolean = false;
+  status: "Running" | "Win" | "Lose" = "Running";
 
+  // For generating mines AFTER first opening.
   private isFirstOpen: boolean = false;
+
+  // For pre-calculate neighbors' positions for each cell.
   private neighbors: Array<Array<Array<Position>>> = [];
 
   constructor(args: { boardWidth: number; boardHeight: number; mineCount: number }) {
@@ -52,8 +55,8 @@ export default class GameStore {
       }),
     });
 
+    this.status = "Running";
     this.isFirstOpen = true;
-    this.isGameOver = false;
 
     this.neighbors = createMatrix({
       width: this.boardWidth,
@@ -67,18 +70,21 @@ export default class GameStore {
     const cell = this.board[position.y][position.x];
     cell.isOpen = true;
 
+    // Generate mines after first opening.
     if (this.isFirstOpen) {
       this.isFirstOpen = false;
-      this.generateMines(position);
+      this.generateMines({ exclude: position });
       console.log("Generated the mines!");
     }
 
+    // Check lose.
     if (cell.hasMine) {
-      this.isGameOver = true;
-      console.log("Game over!");
+      this.status = "Lose";
+      console.log("Lose!");
       return;
     }
 
+    // Open the connected cells if empty.
     if (cell.neighborMineCount <= 0) {
       const connectedCells = this.walkUntilNotZero(position);
 
@@ -86,6 +92,17 @@ export default class GameStore {
         this.board[eachPosition.y][eachPosition.x].isOpen = true;
       }
     }
+
+    // Check win.
+    if (this.checkWin()) {
+      this.status = "Win";
+      console.log("Win!");
+    }
+  }
+
+  @action
+  flagCell(position: Position) {
+    this.board[position.y][position.x].isFlagged = !this.board[position.y][position.x].isFlagged;
   }
 
   private walkUntilNotZero(position: Position) {
@@ -135,12 +152,7 @@ export default class GameStore {
   }
 
   @action
-  markCell(args: Position) {
-    this.board[args.y][args.x].isFlagged = !this.board[args.y][args.x].isFlagged;
-  }
-
-  @action
-  private generateMines(exclude: Position) {
+  private generateMines(args: { exclude: Position }) {
     // (1) Create (w * h - 1) sized array.
     const hasMine: Array<boolean> = [];
 
@@ -154,7 +166,7 @@ export default class GameStore {
     hasMine.sort(() => 0.5 - Math.random());
 
     // (4) Now put the excluded cell.
-    hasMine.splice(exclude.y * this.boardWidth + exclude.x, 0, false);
+    hasMine.splice(args.exclude.y * this.boardWidth + args.exclude.x, 0, false);
 
     // (5) Apply.
     for (let y = 0; y < this.boardHeight; y++) {
@@ -187,6 +199,20 @@ export default class GameStore {
     return diffs
       .map(([dx, dy]) => ({ x: position.x + dx, y: position.y + dy }))
       .filter(({ x, y }) => x >= 0 && y >= 0 && x < this.boardWidth && y < this.boardHeight);
+  }
+
+  private checkWin() {
+    let openCount = 0;
+
+    for (let y = 0; y < this.boardHeight; y++) {
+      for (let x = 0; x < this.boardWidth; x++) {
+        if (this.board[y][x].isOpen) {
+          openCount++;
+        }
+      }
+    }
+
+    return openCount === this.boardWidth * this.boardHeight - this.mineCount;
   }
 }
 

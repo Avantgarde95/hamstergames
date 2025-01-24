@@ -32,13 +32,13 @@ const NumberView = ({ value }: NumberViewProps) => {
   return <span className={`font-mono text-base ${numberStyles[value - 1]}`}>{value}</span>;
 };
 
-interface CommonProps {
+interface ButtonProps {
   position: Position;
+  flag: boolean;
 }
 
-const Button = observer(({ position }: CommonProps) => {
+const Button = ({ position, flag }: ButtonProps) => {
   const gameStore = useContext(GameContext);
-  const cell = gameStore.board[position.y][position.x];
 
   const handleClick = () => {
     gameStore.openCell(position);
@@ -46,7 +46,7 @@ const Button = observer(({ position }: CommonProps) => {
 
   const handleRightClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    gameStore.markCell(position);
+    gameStore.flagCell(position);
   };
 
   return (
@@ -55,19 +55,38 @@ const Button = observer(({ position }: CommonProps) => {
       onClick={handleClick}
       onContextMenu={handleRightClick}
     >
-      {cell.isFlagged && <Flag />}
+      {flag && <Flag />}
     </button>
   );
-});
+};
 
-const BeforeGameOver = observer(({ position }: CommonProps) => {
+interface CommonProps {
+  position: Position;
+}
+
+const OnRunning = observer(({ position }: CommonProps) => {
   const gameStore = useContext(GameContext);
   const cell = gameStore.board[position.y][position.x];
 
-  return cell.isOpen ? <NumberView value={cell.neighborMineCount} /> : <Button position={position} />;
+  return cell.isOpen ? (
+    <NumberView value={cell.neighborMineCount} />
+  ) : (
+    <Button position={position} flag={cell.isFlagged} />
+  );
 });
 
-const AfterGameOver = observer(({ position }: CommonProps) => {
+const OnWin = observer(({ position }: CommonProps) => {
+  const gameStore = useContext(GameContext);
+  const cell = gameStore.board[position.y][position.x];
+
+  return cell.isOpen ? (
+    <NumberView value={cell.neighborMineCount} />
+  ) : (
+    <Button position={position} flag={cell.hasMine} />
+  );
+});
+
+const OnLose = observer(({ position }: CommonProps) => {
   const gameStore = useContext(GameContext);
   const cell = gameStore.board[position.y][position.x];
 
@@ -79,7 +98,13 @@ const CellView = observer(({ position }: CommonProps) => {
 
   return (
     <div className="flex h-7 w-7 flex-row items-center justify-center overflow-hidden border-[1px] border-solid border-[#818181] bg-[#bababa]">
-      {gameStore.isGameOver ? <AfterGameOver position={position} /> : <BeforeGameOver position={position} />}
+      {gameStore.status === "Win" ? (
+        <OnWin position={position} />
+      ) : gameStore.status === "Lose" ? (
+        <OnLose position={position} />
+      ) : (
+        <OnRunning position={position} />
+      )}
     </div>
   );
 });

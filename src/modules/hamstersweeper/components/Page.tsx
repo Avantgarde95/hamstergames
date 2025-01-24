@@ -21,10 +21,10 @@ const Page = observer(() => {
   }, [timer]);
 
   useEffect(() => {
-    if (game.isGameOver) {
+    if (game.status !== "Running") {
       timer.stop();
     }
-  }, [timer, game.isGameOver]);
+  }, [timer, game.status]);
 
   const handleClickRestart = () => {
     game.reset();
@@ -42,7 +42,9 @@ const Page = observer(() => {
             onClick={handleClickRestart}
           >
             🐹
-            {game.isGameOver && <span className="absolute right-0 top-0 text-xs">💧</span>}
+            <span className="absolute right-0 top-0 text-xs">
+              {game.status === "Win" ? "❤️" : game.status === "Lose" ? "💧" : null}
+            </span>
           </button>
           <Counter value={Math.floor(timer.time / 1000)} />
         </div>
