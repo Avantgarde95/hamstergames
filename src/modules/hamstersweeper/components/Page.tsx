@@ -6,10 +6,10 @@ import { observer } from "mobx-react-lite";
 import Timer from "@/common/stores/Timer";
 import BoardView from "@/modules/hamstersweeper/components/BoardView";
 import Counter from "@/modules/hamstersweeper/components/Counter";
-import Game, { GameContext } from "@/modules/hamstersweeper/stores/Game";
+import GameStore, { GameContext } from "@/modules/hamstersweeper/stores/GameStore";
 
 const Page = observer(() => {
-  const [game, setGame] = useState<Game>(() => new Game({ boardWidth: 9, boardHeight: 9, mineCount: 10 }));
+  const [game, setGame] = useState<GameStore>(() => new GameStore({ boardWidth: 9, boardHeight: 9, mineCount: 10 }));
   const [timer] = useState<Timer>(() => new Timer(1000));
 
   useEffect(() => {

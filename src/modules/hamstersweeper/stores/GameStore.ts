@@ -5,7 +5,7 @@ import { action, makeObservable, observable } from "mobx";
 
 import { createMatrix } from "@/common/utils/MathUtils";
 
-interface Position {
+export interface Position {
   x: number;
   y: number;
 }
@@ -17,7 +17,7 @@ export interface Cell {
   isFlagged: boolean;
 }
 
-export default class Game {
+export default class GameStore {
   readonly boardWidth: number;
   readonly boardHeight: number;
   readonly mineCount: number;
@@ -186,4 +186,4 @@ export default class Game {
   }
 }
 
-export const GameContext = createContext({} as Game);
+export const GameContext = createContext({} as GameStore);
