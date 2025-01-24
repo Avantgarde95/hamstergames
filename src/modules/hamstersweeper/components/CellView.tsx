@@ -78,7 +78,7 @@ const CellView = observer(({ position }: CommonProps) => {
   const gameStore = useContext(GameContext);
 
   return (
-    <div className="flex h-6 w-6 flex-row items-center justify-center overflow-hidden border-[1px] border-solid border-[#818181] bg-[#bababa]">
+    <div className="flex h-7 w-7 flex-row items-center justify-center overflow-hidden border-[1px] border-solid border-[#818181] bg-[#bababa]">
       {gameStore.isGameOver ? <AfterGameOver position={position} /> : <BeforeGameOver position={position} />}
     </div>
   );

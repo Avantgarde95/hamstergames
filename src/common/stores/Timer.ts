@@ -28,6 +28,7 @@ export default class Timer {
     this.startTime = this.getNow();
     this.time = 0;
 
+    // For safety.
     if (this.job !== null) {
       window.clearInterval(this.job);
     }
@@ -39,6 +40,8 @@ export default class Timer {
         this.time = this.getNow() - this.startTime;
       });
     }, this.interval);
+
+    console.log("Timer started");
   }
 
   stop() {
@@ -46,6 +49,8 @@ export default class Timer {
       window.clearInterval(this.job);
       this.job = null;
     }
+
+    console.log("Timer stopped");
   }
 
   private getNow() {

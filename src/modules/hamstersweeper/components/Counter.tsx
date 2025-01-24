@@ -3,7 +3,7 @@ interface CounterProps {
 }
 
 const Counter = ({ value }: CounterProps) => (
-  <div className="flex h-6 w-9 flex-row items-center justify-center bg-black font-mono text-lg leading-none text-[#E63225]">
+  <div className="flex h-7 w-11 flex-row items-center justify-center bg-slate-800 font-mono text-lg leading-none text-[#E63225]">
     {`${value % 1000}`.padStart(3, "0")}
   </div>
 );

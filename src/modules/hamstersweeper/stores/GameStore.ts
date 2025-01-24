@@ -23,18 +23,24 @@ export default class GameStore {
   readonly mineCount: number;
 
   @observable
-  readonly board: Array<Array<Cell>>;
+  board: Array<Array<Cell>> = [];
   @observable
-  isGameOver: boolean;
+  isGameOver: boolean = false;
 
-  private isFirstOpen: boolean;
-  private readonly neighbors: Array<Array<Array<Position>>>;
+  private isFirstOpen: boolean = false;
+  private neighbors: Array<Array<Array<Position>>> = [];
 
   constructor(args: { boardWidth: number; boardHeight: number; mineCount: number }) {
     this.boardWidth = args.boardWidth;
     this.boardHeight = args.boardHeight;
     this.mineCount = args.mineCount;
 
+    this.reset();
+
+    makeObservable(this);
+  }
+
+  reset() {
     this.board = createMatrix({
       width: this.boardWidth,
       height: this.boardHeight,
@@ -54,8 +60,6 @@ export default class GameStore {
       height: this.boardHeight,
       initialValue: position => this.getNeighbors(position),
     });
-
-    makeObservable(this);
   }
 
   @action
