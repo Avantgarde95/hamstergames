@@ -39,7 +39,7 @@ test("Initialize", () => {
   expect(gameStore.board[0].length).toEqual(4);
 });
 
-test("Open first", () => {
+test("Generate mines after the first opening", () => {
   const boardWidth = 4;
   const boardHeight = 5;
   const mineCount = 6;
@@ -95,4 +95,21 @@ test("Lose", () => {
     gameStore.openCell(mined[0]);
     expect(gameStore.status).toEqual("Lose");
   }
+});
+
+test("Flag counting", () => {
+  const boardWidth = 10;
+  const boardHeight = 5;
+  const mineCount = 6;
+
+  const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
+
+  for (let x = 0; x < mineCount; x++) {
+    gameStore.flagCell({ x, y: 0 });
+  }
+
+  const boardSnapshot = JSON.stringify(gameStore.board);
+
+  gameStore.flagCell({ x: 0, y: 1 });
+  expect(JSON.stringify(gameStore.board)).toEqual(boardSnapshot);
 });

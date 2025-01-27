@@ -37,7 +37,7 @@ interface ButtonProps {
   flag: boolean;
 }
 
-const Button = ({ position, flag }: ButtonProps) => {
+const Button = observer(({ position, flag }: ButtonProps) => {
   const gameStore = useContext(GameContext);
 
   const handleClick = () => {
@@ -51,14 +51,17 @@ const Button = ({ position, flag }: ButtonProps) => {
 
   return (
     <button
-      className="border-outset flex h-full w-full flex-row items-center justify-center overflow-hidden border-2 bg-[#c0c0c0] active:opacity-0"
+      className={`border-outset flex h-full w-full flex-row items-center justify-center overflow-hidden border-2 bg-[#c0c0c0] ${
+        gameStore.status === "Running" ? "active:opacity-0" : ""
+      }`}
       onClick={handleClick}
       onContextMenu={handleRightClick}
+      disabled={gameStore.status !== "Running"}
     >
       {flag && <Flag />}
     </button>
   );
-};
+});
 
 interface CommonProps {
   position: Position;

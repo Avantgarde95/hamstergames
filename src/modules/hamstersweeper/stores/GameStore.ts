@@ -2,6 +2,7 @@
 
 import { createContext } from "react";
 import { action, makeObservable, observable } from "mobx";
+import { sampleSize } from "lodash";
 
 import { createMatrix } from "@/common/utils/MathUtils";
 
@@ -73,6 +74,10 @@ export default class GameStore {
 
   @action
   openCell(position: Position) {
+    if (this.status !== "Running") {
+      return;
+    }
+
     const cell = this.board[position.y][position.x];
     cell.isOpen = true;
 
@@ -108,6 +113,10 @@ export default class GameStore {
 
   @action
   flagCell(position: Position) {
+    if (this.status !== "Running") {
+      return;
+    }
+
     const prevValue = this.board[position.y][position.x].isFlagged;
 
     if (prevValue) {
@@ -169,33 +178,25 @@ export default class GameStore {
 
   @action
   private generateMines(args: { exclude: Position }) {
-    // (1) Create (w * h - 1) sized array.
-    const hasMine: Array<boolean> = [];
+    const positions: Array<Position> = [];
 
-    for (let i = 0; i < this.boardWidth * this.boardHeight - 1; i++) {
-      // (2) Fill mines.
-      hasMine.push(i < this.mineCount);
-    }
-
-    // (3) Shuffle.
-    // https://stackoverflow.com/a/38571132
-    hasMine.sort(() => 0.5 - Math.random());
-
-    // (4) Now put the excluded cell.
-    hasMine.splice(args.exclude.y * this.boardWidth + args.exclude.x, 0, false);
-
-    // (5) Apply.
     for (let y = 0; y < this.boardHeight; y++) {
       for (let x = 0; x < this.boardWidth; x++) {
-        if (!hasMine[y * this.boardWidth + x]) {
+        if (x === args.exclude.x && y === args.exclude.y) {
           continue;
         }
 
-        this.board[y][x].hasMine = true;
+        positions.push({ x, y });
+      }
+    }
 
-        for (const neighbor of this.neighbors[y][x]) {
-          this.board[neighbor.y][neighbor.x].neighborMineCount++;
-        }
+    const minePositions = sampleSize(positions, this.mineCount);
+
+    for (const position of minePositions) {
+      this.board[position.y][position.x].hasMine = true;
+
+      for (const neighbor of this.neighbors[position.y][position.x]) {
+        this.board[neighbor.y][neighbor.x].neighborMineCount++;
       }
     }
   }
