@@ -33,8 +33,8 @@ const Page = observer(() => {
   };
 
   return (
-    <div className="flex h-full w-full flex-row items-center justify-center overflow-auto p-4">
-      <div className="border-outset border-4 bg-[#C0C0C0] p-2">
+    <div className="flex h-full w-full flex-row items-start overflow-auto p-4">
+      <div className="border-outset m-auto border-4 bg-[#C0C0C0] p-2">
         <div className="border-inset border-inset mb-1 flex flex-row items-center justify-between border-4 p-1">
           <Counter value={game.unusedFlagCount} />
           <button

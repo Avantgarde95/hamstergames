@@ -47,6 +47,7 @@ export default class GameStore {
     makeObservable(this);
   }
 
+  @action
   reset() {
     this.board = createMatrix({
       width: this.boardWidth,

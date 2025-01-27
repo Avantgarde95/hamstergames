@@ -10,9 +10,9 @@ const BoardView = observer(() => {
   const gameStore = useContext(GameContext);
 
   return (
-    <div className="border-inset flex flex-col border-4">
+    <div className="border-inset flex flex-col items-start border-4">
       {gameStore.board.map((row, y) => (
-        <div key={y} className="flex flex-row">
+        <div key={y} className="flex flex-row items-start">
           {row.map((cell, x) => (
             <CellView key={x} position={{ x, y }} />
           ))}

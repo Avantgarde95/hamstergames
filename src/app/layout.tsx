@@ -30,7 +30,7 @@ const Layout = ({ children }: CommonChildrenProps) => (
     </head>
     <body className="m-0 h-full w-full p-0 font-sans">
       <NextTopLoader />
-      <div className="h-full w-full overflow-y-auto">{children}</div>
+      {children}
     </body>
   </html>
 );
