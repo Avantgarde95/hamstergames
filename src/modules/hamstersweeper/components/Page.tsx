@@ -36,7 +36,7 @@ const Page = observer(() => {
     <div className="flex h-full w-full flex-row items-center justify-center overflow-auto p-4">
       <div className="border-outset border-4 bg-[#C0C0C0] p-2">
         <div className="border-inset border-inset mb-1 flex flex-row items-center justify-between border-4 p-1">
-          <Counter value={0} />
+          <Counter value={game.unusedFlagCount} />
           <button
             className="border-outset active:border-inset relative h-10 w-10 overflow-hidden border-4 bg-[#B3B3B3] text-xl"
             onClick={handleClickRestart}

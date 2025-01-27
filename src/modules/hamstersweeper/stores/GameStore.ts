@@ -24,8 +24,12 @@ export default class GameStore {
 
   @observable
   board: Array<Array<Cell>> = [];
+
   @observable
   status: "Running" | "Win" | "Lose" = "Running";
+
+  @observable
+  unusedFlagCount = 0;
 
   // For generating mines AFTER first opening.
   private isFirstOpen: boolean = false;
@@ -56,6 +60,7 @@ export default class GameStore {
     });
 
     this.status = "Running";
+    this.unusedFlagCount = this.mineCount;
     this.isFirstOpen = true;
 
     this.neighbors = createMatrix({
@@ -102,7 +107,17 @@ export default class GameStore {
 
   @action
   flagCell(position: Position) {
-    this.board[position.y][position.x].isFlagged = !this.board[position.y][position.x].isFlagged;
+    const prevValue = this.board[position.y][position.x].isFlagged;
+
+    if (prevValue) {
+      this.board[position.y][position.x].isFlagged = false;
+      this.unusedFlagCount++;
+    } else {
+      if (this.unusedFlagCount > 0) {
+        this.board[position.y][position.x].isFlagged = true;
+        this.unusedFlagCount--;
+      }
+    }
   }
 
   private walkUntilNotZero(position: Position) {
