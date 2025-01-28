@@ -1,6 +1,7 @@
+import { createContext } from "react";
 import { action, makeObservable, observable, runInAction } from "mobx";
 
-export default class Timer {
+export default class TimerStore {
   private interval: number;
 
   private startTime: number;
@@ -10,8 +11,8 @@ export default class Timer {
 
   private job: number | null;
 
-  constructor(interval: number) {
-    this.interval = interval;
+  constructor(args: { interval: number }) {
+    this.interval = args.interval;
     this.startTime = 0;
     this.time = 0;
     this.job = null;
@@ -57,3 +58,5 @@ export default class Timer {
     return Date.now();
   }
 }
+
+export const TimerContext = createContext({} as TimerStore);

@@ -1,4 +1,4 @@
-import Timer from "@/common/stores/Timer";
+import TimerStore from "@/common/stores/TimerStore";
 import { wait } from "@/common/utils/AsyncUtils";
 
 function toSeconds(milliseconds: number) {
@@ -6,7 +6,7 @@ function toSeconds(milliseconds: number) {
 }
 
 test("Interval = 1s", async () => {
-  const timer = new Timer(1000);
+  const timer = new TimerStore({ interval: 1000 });
 
   expect(timer.time).toEqual(0);
 

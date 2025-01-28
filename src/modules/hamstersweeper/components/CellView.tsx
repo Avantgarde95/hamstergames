@@ -4,6 +4,7 @@ import { MouseEvent, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
 import { GameContext, Position } from "@/modules/hamstersweeper/stores/GameStore";
+import { UIContext } from "@/modules/hamstersweeper/stores/UIStore";
 
 const Mine = () => <span className="text-sm">🐹</span>;
 
@@ -39,9 +40,14 @@ interface ButtonProps {
 
 const Button = observer(({ position, flag }: ButtonProps) => {
   const gameStore = useContext(GameContext);
+  const uiStore = useContext(UIContext);
 
   const handleClick = () => {
-    gameStore.openCell(position);
+    if (uiStore.clickMode === "Open") {
+      gameStore.openCell(position);
+    } else if (uiStore.clickMode === "Flag") {
+      gameStore.flagCell(position);
+    }
   };
 
   const handleRightClick = (event: MouseEvent<HTMLButtonElement>) => {
