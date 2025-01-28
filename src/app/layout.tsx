@@ -2,8 +2,10 @@ import { configure } from "mobx";
 import NextTopLoader from "nextjs-toploader";
 
 import { CommonChildrenProps } from "@/common/models/Props";
+import Dialog from "@/common/components/Dialog";
 
 import "@/common/styles/Global.css";
+import LayoutWrapper from "@/common/components/LayoutWrapper";
 
 configure({
   enforceActions: "always",
@@ -28,9 +30,12 @@ const Layout = ({ children }: CommonChildrenProps) => (
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet" />
     </head>
-    <body className="m-0 h-full w-full p-0 font-sans">
-      <NextTopLoader />
-      {children}
+    <body className="relative m-0 h-full w-full p-0 font-sans">
+      <LayoutWrapper>
+        <NextTopLoader />
+        {children}
+        <Dialog />
+      </LayoutWrapper>
     </body>
   </html>
 );

@@ -2,7 +2,7 @@
 
 import { createContext } from "react";
 import { action, makeObservable, observable } from "mobx";
-import { sampleSize } from "lodash";
+import { sampleSize } from "lodash-es";
 
 import { createMatrix } from "@/common/utils/MathUtils";
 

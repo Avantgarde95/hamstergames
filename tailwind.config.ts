@@ -10,7 +10,12 @@ export default {
         // Since Fira Code doesn't support Korean, we just put sans-serif font as a fallback...
         mono: ["Fira Code", "Pretendard", "monospace"],
       },
-      keyframes: {},
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+      },
     },
   },
   plugins: [],
