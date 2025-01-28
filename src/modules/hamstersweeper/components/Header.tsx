@@ -28,10 +28,14 @@ const Result = observer(() => {
     result = sample(loseMessages);
   }
 
-  return <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono">{result}</span>;
+  return (
+    <span className="absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center font-mono">
+      {result}
+    </span>
+  );
 });
 
-const outerButtonStyle = "h-8 w-8 text-lg hover:bg-slate-400 active:bg-slate-400";
+const outerButtonStyle = "h-8 w-8 text-lg hover:bg-slate-400 active:bg-slate-400 relative z-[3]";
 
 const helpDialogContent = (
   <>
