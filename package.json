@@ -39,6 +39,8 @@
   },
   "scripts": {
     "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
     "test": "jest --passWithNoTests",
     "lint": "next lint --dir src",
     "lint:fix": "next lint --dir src --fix",
