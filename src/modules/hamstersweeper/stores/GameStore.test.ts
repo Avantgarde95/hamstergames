@@ -87,10 +87,7 @@ test("Lose", () => {
     gameStore.openCell({ x: 1, y: 2 });
     expect(gameStore.status).toEqual("Running");
 
-    const { mined, unmined } = getMinedCells(gameStore);
-
-    gameStore.openCell(unmined[0]);
-    expect(gameStore.status).toEqual("Running");
+    const { mined } = getMinedCells(gameStore);
 
     gameStore.openCell(mined[0]);
     expect(gameStore.status).toEqual("Lose");

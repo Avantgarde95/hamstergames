@@ -18,6 +18,10 @@ export interface Cell {
   isFlagged: boolean;
 }
 
+function positionToKey(position: Position) {
+  return `${position.x}-${position.y}`;
+}
+
 export default class GameStore {
   readonly boardWidth: number;
   readonly boardHeight: number;
@@ -84,7 +88,7 @@ export default class GameStore {
     // Generate mines after first opening.
     if (this.isFirstOpen) {
       this.isFirstOpen = false;
-      this.generateMines({ exclude: position });
+      this.generateMines({ exclude: [position, ...this.neighbors[position.y][position.x]] });
       console.log("Generated the mines!");
     }
 
@@ -177,12 +181,13 @@ export default class GameStore {
   }
 
   @action
-  private generateMines(args: { exclude: Position }) {
+  private generateMines(args: { exclude: Array<Position> }) {
+    const excludeSet = new Set(args.exclude.map(positionToKey));
     const positions: Array<Position> = [];
 
     for (let y = 0; y < this.boardHeight; y++) {
       for (let x = 0; x < this.boardWidth; x++) {
-        if (x === args.exclude.x && y === args.exclude.y) {
+        if (excludeSet.has(positionToKey({ x, y }))) {
           continue;
         }
 
