@@ -3,10 +3,10 @@
 import BoardView from "@/modules/hamstersweeper/components/BoardView";
 import GameStore, { GameContext } from "@/modules/hamstersweeper/stores/GameStore";
 import UIStore, { UIContext } from "@/modules/hamstersweeper/stores/UIStore";
-import Header from "@/modules/hamstersweeper/components/Header";
+import StatusView from "@/modules/hamstersweeper/components/StatusView";
 import TimerStore, { TimerContext } from "@/common/stores/TimerStore";
 import Footer from "@/modules/hamstersweeper/components/Footer";
-import Menu from "@/modules/hamstersweeper/components/Menu";
+import Header from "@/modules/hamstersweeper/components/Header";
 
 const difficultyMap: Record<
   string,
@@ -36,8 +36,8 @@ const GameView = ({ difficulty }: GameViewProps) => {
         <GameContext.Provider value={gameStore}>
           <div className="flex h-full w-full flex-row items-start overflow-auto p-4">
             <div className="border-outset m-auto border-4 bg-[#C0C0C0] p-2 pt-0">
-              <Menu />
               <Header />
+              <StatusView />
               <BoardView />
               <Footer />
             </div>
