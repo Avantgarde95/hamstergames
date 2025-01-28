@@ -19,6 +19,9 @@ const Page = () => (
       <SmartLink className={linkStyle} href={`${allRoutes.hamstersweeper.game}?difficulty=hard`}>
         🔥 Hard
       </SmartLink>
+      <SmartLink className={linkStyle} href={allRoutes.home}>
+        🏠 Home
+      </SmartLink>
     </div>
   </div>
 );
