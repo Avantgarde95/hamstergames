@@ -6,9 +6,9 @@ import { observer } from "mobx-react-lite";
 import { GameContext, Position } from "@/modules/hamstersweeper/stores/GameStore";
 import { UIContext } from "@/modules/hamstersweeper/stores/UIStore";
 
-const Mine = () => <span className="text-sm">🐹</span>;
+const Mine = () => <span className="text-base">🐹</span>;
 
-const Flag = () => <span className="text-sm">🧀</span>;
+const Flag = () => <span className="text-base">🧀</span>;
 
 const numberStyles = [
   "text-[#0000F5]",
@@ -30,7 +30,7 @@ const NumberView = ({ value }: NumberViewProps) => {
     return null;
   }
 
-  return <span className={`font-mono text-base ${numberStyles[value - 1]}`}>{value}</span>;
+  return <span className={`font-mono text-lg ${numberStyles[value - 1]}`}>{value}</span>;
 };
 
 interface ButtonProps {
@@ -106,7 +106,7 @@ const CellView = observer(({ position }: CommonProps) => {
   const gameStore = useContext(GameContext);
 
   return (
-    <div className="flex h-7 w-7 flex-row items-center justify-center overflow-hidden border-[1px] border-solid border-[#818181] bg-[#bababa]">
+    <div className="flex h-8 w-8 flex-row items-center justify-center overflow-hidden border-[1px] border-solid border-[#818181] bg-[#bababa]">
       {gameStore.status === "Win" ? (
         <OnWin position={position} />
       ) : gameStore.status === "Lose" ? (
