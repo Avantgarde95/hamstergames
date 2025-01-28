@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext } from "react";
 import { action, makeObservable, observable } from "mobx";
 
