@@ -34,7 +34,7 @@ const GameView = ({ difficulty }: GameViewProps) => {
     <UIContext.Provider value={uiStore}>
       <TimerContext.Provider value={timerStore}>
         <GameContext.Provider value={gameStore}>
-          <div className="flex h-full w-full flex-row items-start overflow-auto p-4">
+          <div className="flex h-full w-full flex-row items-start overflow-auto bg-white p-4">
             <div className="border-outset m-auto border-4 bg-[#C0C0C0] p-2 pt-0">
               <Header />
               <StatusView />
