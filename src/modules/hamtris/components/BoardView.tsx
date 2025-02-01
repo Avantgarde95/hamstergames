@@ -1,25 +1,44 @@
 "use client";
 
-import { useContext } from "react";
-import { observer } from "mobx-react-lite";
+import { ReactNode, useContext } from "react";
 
 import { GameContext } from "@/modules/hamtris/stores/GameStore";
-import CellView from "@/modules/hamtris/components/CellView";
+import CellsView from "@/modules/hamtris/components/CellsView";
+import { mergeStyles } from "@/common/utils/StyleUtils";
 
-const BoardView = observer(() => {
+const BoardView = () => {
   const gameStore = useContext(GameContext);
 
+  const rows: Array<ReactNode> = [];
+
+  for (let y = 0; y < gameStore.boardHeight; y++) {
+    const row: Array<ReactNode> = [];
+
+    for (let x = 0; x < gameStore.boardWidth; x++) {
+      row.push(
+        <div
+          className={mergeStyles("relative h-6 w-6 border-b-[1px] border-r-[1px] border-gray-400", {
+            "border-t-[1px]": y === 0,
+            "border-l-[1px]": x === 0,
+          })}
+          key={x}
+        />
+      );
+    }
+
+    rows.push(
+      <div key={y} className="flex flex-row items-start">
+        {row}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-start">
-      {gameStore.board.map((row, y) => (
-        <div key={y} className="flex flex-row items-start">
-          {row.map((cell, x) => (
-            <CellView key={x} position={{ x, y }} />
-          ))}
-        </div>
-      ))}
+    <div className="relative flex flex-col items-start">
+      <CellsView />
+      {rows}
     </div>
   );
-});
+};
 
 export default BoardView;
