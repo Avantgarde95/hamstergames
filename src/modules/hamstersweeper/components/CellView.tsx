@@ -3,6 +3,7 @@
 import { MouseEvent, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
+import { mergeStyles } from "@/common/utils/StyleUtils";
 import { GameContext, Position } from "@/modules/hamstersweeper/stores/GameStore";
 import { UIContext } from "@/modules/hamstersweeper/stores/UIStore";
 
@@ -57,9 +58,12 @@ const Button = observer(({ position, flag }: ButtonProps) => {
 
   return (
     <button
-      className={`border-outset flex h-full w-full flex-row items-center justify-center overflow-hidden border-2 bg-[#c0c0c0] ${
-        gameStore.status === "Running" ? "active:opacity-0" : ""
-      }`}
+      className={mergeStyles(
+        "border-outset flex h-full w-full flex-row items-center justify-center overflow-hidden border-2 bg-[#c0c0c0]",
+        {
+          "active:opacity-0": gameStore.status === "Running",
+        }
+      )}
       onClick={handleClick}
       onContextMenu={handleRightClick}
       disabled={gameStore.status !== "Running"}

@@ -17,3 +17,16 @@ export function createMatrix<Value>(args: {
 
   return matrix;
 }
+
+export function rotateMatrixRight<Value>(matrix: Array<Array<Value>>) {
+  const width = matrix[0].length;
+  const height = matrix.length;
+
+  const transpose = createMatrix({ width: height, height: width, initialValue: ({ x, y }) => matrix[x][y] });
+
+  for (const row of transpose) {
+    row.reverse();
+  }
+
+  return transpose;
+}
