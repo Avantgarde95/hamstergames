@@ -4,8 +4,8 @@ import { MouseEvent, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
 import { mergeStyles } from "@/common/utils/StyleUtils";
-import { GameContext, Position } from "@/modules/hamstersweeper/stores/GameStore";
-import { UIContext } from "@/modules/hamstersweeper/stores/UIStore";
+import { Position } from "@/modules/hamstersweeper/stores/GameStore";
+import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const Mine = () => <span className="text-base">🐹</span>;
 
@@ -40,8 +40,7 @@ interface ButtonProps {
 }
 
 const Button = observer(({ position, flag }: ButtonProps) => {
-  const gameStore = useContext(GameContext);
-  const uiStore = useContext(UIContext);
+  const { gameStore, uiStore } = useContext(GameContext);
 
   const handleClick = () => {
     if (uiStore.clickMode === "Open") {
@@ -78,7 +77,7 @@ interface CommonProps {
 }
 
 const OnRunning = observer(({ position }: CommonProps) => {
-  const gameStore = useContext(GameContext);
+  const { gameStore } = useContext(GameContext);
   const cell = gameStore.board[position.y][position.x];
 
   return cell.isOpen ? (
@@ -89,7 +88,7 @@ const OnRunning = observer(({ position }: CommonProps) => {
 });
 
 const OnWin = observer(({ position }: CommonProps) => {
-  const gameStore = useContext(GameContext);
+  const { gameStore } = useContext(GameContext);
   const cell = gameStore.board[position.y][position.x];
 
   return cell.isOpen ? (
@@ -100,14 +99,14 @@ const OnWin = observer(({ position }: CommonProps) => {
 });
 
 const OnLose = observer(({ position }: CommonProps) => {
-  const gameStore = useContext(GameContext);
+  const { gameStore } = useContext(GameContext);
   const cell = gameStore.board[position.y][position.x];
 
   return cell.hasMine ? <Mine /> : <NumberView value={cell.neighborMineCount} />;
 });
 
 const CellView = observer(({ position }: CommonProps) => {
-  const gameStore = useContext(GameContext);
+  const { gameStore } = useContext(GameContext);
 
   return (
     <div className="flex h-8 w-8 flex-row items-center justify-center overflow-hidden border-[1px] border-solid border-[#818181] bg-[#bababa]">

@@ -1,6 +1,3 @@
-"use client";
-
-import { createContext } from "react";
 import { action, makeObservable, observable } from "mobx";
 import { sampleSize } from "lodash-es";
 
@@ -237,5 +234,3 @@ export default class GameStore {
     return openCount === this.boardWidth * this.boardHeight - this.mineCount;
   }
 }
-
-export const GameContext = createContext({} as GameStore);

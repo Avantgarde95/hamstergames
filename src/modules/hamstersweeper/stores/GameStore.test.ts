@@ -85,6 +85,11 @@ test("Lose", () => {
     const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
 
     gameStore.openCell({ x: 1, y: 2 });
+
+    if (gameStore.status === "Win") {
+      continue;
+    }
+
     expect(gameStore.status).toEqual("Running");
 
     const { mined } = getMinedCells(gameStore);

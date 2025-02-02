@@ -3,10 +3,10 @@
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 
-import { GlobalUIContext } from "@/common/stores/GlobalUIStore";
+import GlobalContext from "@/common/components/GlobalContext";
 
 const Dialog = observer(() => {
-  const globalUIStore = useContext(GlobalUIContext);
+  const { globalUIStore } = useContext(GlobalContext);
 
   const handleClickBackdrop = () => {
     globalUIStore.destroyDialog();

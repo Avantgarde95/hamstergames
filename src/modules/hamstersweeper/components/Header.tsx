@@ -6,16 +6,14 @@ import { useRouter } from "next/navigation";
 import { sample } from "lodash-es";
 
 import allRoutes from "@/common/models/Routes";
-import { GlobalUIContext } from "@/common/stores/GlobalUIStore";
-import { TimerContext } from "@/common/stores/TimerStore";
-import { GameContext } from "@/modules/hamstersweeper/stores/GameStore";
+import GameContext from "@/modules/hamstersweeper/components/GameContext";
+import GlobalContext from "@/common/components/GlobalContext";
 
 const winMessages = ["Win!", "Nice!", "Thanks!", "Good!"];
 const loseMessages = ["Ouch!", "It hurts!", "Lose!", "Try again!"];
 
 const Result = observer(() => {
-  const gameStore = useContext(GameContext);
-  const timerStore = useContext(TimerContext);
+  const { gameStore, timerStore } = useContext(GameContext);
 
   let result: ReactNode = "";
 
@@ -54,7 +52,7 @@ const helpDialogContent = (
 
 const Header = () => {
   const router = useRouter();
-  const globalUIStore = useContext(GlobalUIContext);
+  const { globalUIStore } = useContext(GlobalContext);
 
   const handleClickBack = () => {
     router.push(allRoutes.hamstersweeper.home);

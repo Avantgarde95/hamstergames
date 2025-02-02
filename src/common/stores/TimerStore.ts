@@ -1,6 +1,3 @@
-"use client";
-
-import { createContext } from "react";
 import { action, makeObservable, observable, runInAction } from "mobx";
 
 export default class TimerStore {
@@ -60,5 +57,3 @@ export default class TimerStore {
     return Date.now();
   }
 }
-
-export const TimerContext = createContext({} as TimerStore);

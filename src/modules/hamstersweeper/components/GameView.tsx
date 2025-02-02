@@ -1,12 +1,13 @@
 "use client";
 
 import BoardView from "@/modules/hamstersweeper/components/BoardView";
-import GameStore, { GameContext } from "@/modules/hamstersweeper/stores/GameStore";
-import UIStore, { UIContext } from "@/modules/hamstersweeper/stores/UIStore";
+import GameStore from "@/modules/hamstersweeper/stores/GameStore";
+import UIStore from "@/modules/hamstersweeper/stores/UIStore";
 import StatusView from "@/modules/hamstersweeper/components/StatusView";
-import TimerStore, { TimerContext } from "@/common/stores/TimerStore";
+import TimerStore from "@/common/stores/TimerStore";
 import Footer from "@/modules/hamstersweeper/components/Footer";
 import Header from "@/modules/hamstersweeper/components/Header";
+import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const difficultyMap: Record<
   string,
@@ -31,20 +32,16 @@ const GameView = ({ difficulty }: GameViewProps) => {
   const gameStore = new GameStore(difficultyMap[difficulty] ?? difficultyMap.easy);
 
   return (
-    <UIContext.Provider value={uiStore}>
-      <TimerContext.Provider value={timerStore}>
-        <GameContext.Provider value={gameStore}>
-          <div className="flex h-full w-full flex-row items-start overflow-auto bg-white p-4">
-            <div className="border-outset m-auto border-4 bg-[#C0C0C0] p-2 pt-0">
-              <Header />
-              <StatusView />
-              <BoardView />
-              <Footer />
-            </div>
-          </div>
-        </GameContext.Provider>
-      </TimerContext.Provider>
-    </UIContext.Provider>
+    <GameContext.Provider value={{ uiStore, timerStore, gameStore }}>
+      <div className="flex h-full w-full flex-row items-start overflow-auto bg-white p-4">
+        <div className="border-outset m-auto border-4 bg-[#C0C0C0] p-2 pt-0">
+          <Header />
+          <StatusView />
+          <BoardView />
+          <Footer />
+        </div>
+      </div>
+    </GameContext.Provider>
   );
 };
 

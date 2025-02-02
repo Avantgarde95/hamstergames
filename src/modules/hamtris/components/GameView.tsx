@@ -1,13 +1,14 @@
 "use client";
 
 import BoardView from "@/modules/hamtris/components/BoardView";
-import GameStore, { GameContext } from "@/modules/hamtris/stores/GameStore";
+import GameContext from "@/modules/hamtris/components/GameContext";
+import GameStore from "@/modules/hamtris/stores/GameStore";
 
 const GameView = () => {
   const gameStore = new GameStore();
 
   return (
-    <GameContext.Provider value={gameStore}>
+    <GameContext.Provider value={{ gameStore }}>
       <div className="flex h-full w-full flex-row items-start bg-black p-4">
         <div className="m-auto">
           <BoardView />

@@ -1,6 +1,4 @@
-"use client";
-
-import { createContext, ReactNode } from "react";
+import { ReactNode } from "react";
 import { action, makeObservable, observable } from "mobx";
 
 export default class GlobalUIStore {
@@ -31,5 +29,3 @@ export default class GlobalUIStore {
     this.openDialog = false;
   }
 }
-
-export const GlobalUIContext = createContext({} as GlobalUIStore);

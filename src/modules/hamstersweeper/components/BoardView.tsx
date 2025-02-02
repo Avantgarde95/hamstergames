@@ -3,11 +3,11 @@
 import { ReactNode, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
-import { GameContext } from "@/modules/hamstersweeper/stores/GameStore";
 import CellView from "@/modules/hamstersweeper/components/CellView";
+import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const BoardView = observer(() => {
-  const gameStore = useContext(GameContext);
+  const { gameStore } = useContext(GameContext);
 
   const rows: Array<ReactNode> = [];
 

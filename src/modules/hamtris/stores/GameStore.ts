@@ -1,6 +1,3 @@
-"use client";
-
-import { createContext } from "react";
 import { action, makeObservable, observable } from "mobx";
 
 import { createMatrix, rotateMatrixRight } from "@/common/utils/MathUtils";
@@ -195,5 +192,3 @@ export default class GameStore {
     }
   }
 }
-
-export const GameContext = createContext({} as GameStore);

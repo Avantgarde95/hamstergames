@@ -3,13 +3,11 @@
 import { observer } from "mobx-react-lite";
 import { useContext, useEffect } from "react";
 
-import { TimerContext } from "@/common/stores/TimerStore";
-import { GameContext } from "@/modules/hamstersweeper/stores/GameStore";
 import Counter from "@/modules/hamstersweeper/components/Counter";
+import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const StatusView = observer(() => {
-  const gameStore = useContext(GameContext);
-  const timerStore = useContext(TimerContext);
+  const { gameStore, timerStore } = useContext(GameContext);
 
   useEffect(() => {
     timerStore.start();

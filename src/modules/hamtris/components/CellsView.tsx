@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 
 import { mergeStyles } from "@/common/utils/StyleUtils";
-import { BlockType, GameContext } from "@/modules/hamtris/stores/GameStore";
+import { BlockType } from "@/modules/hamtris/stores/GameStore";
+import GameContext from "@/modules/hamtris/components/GameContext";
 
 const drawMap: Record<BlockType, { style: string; content: string }> = {
   I: { style: "bg-[#00f0f0]", content: "🔎" },
@@ -15,8 +16,7 @@ const drawMap: Record<BlockType, { style: string; content: string }> = {
 };
 
 const CellsView = observer(() => {
-  const gameStore = useContext(GameContext);
-  console.log(gameStore.draw);
+  const { gameStore } = useContext(GameContext);
 
   return (
     <>

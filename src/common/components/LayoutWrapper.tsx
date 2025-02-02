@@ -1,12 +1,13 @@
 "use client";
 
+import GlobalContext from "@/common/components/GlobalContext";
 import { CommonChildrenProps } from "@/common/models/Props";
-import GlobalUIStore, { GlobalUIContext } from "@/common/stores/GlobalUIStore";
+import GlobalUIStore from "@/common/stores/GlobalUIStore";
 
 const LayoutWrapper = ({ children }: CommonChildrenProps) => {
   const globalUIStore = new GlobalUIStore();
 
-  return <GlobalUIContext.Provider value={globalUIStore}>{children}</GlobalUIContext.Provider>;
+  return <GlobalContext.Provider value={{ globalUIStore }}>{children}</GlobalContext.Provider>;
 };
 
 export default LayoutWrapper;

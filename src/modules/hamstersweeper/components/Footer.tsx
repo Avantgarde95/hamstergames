@@ -3,13 +3,13 @@
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 
-import { UIContext } from "@/modules/hamstersweeper/stores/UIStore";
+import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const showStyle = "opacity-100";
 const hideStyle = "opacity-30";
 
 const Footer = observer(() => {
-  const uiStore = useContext(UIContext);
+  const { uiStore } = useContext(GameContext);
 
   return (
     <div className="mt-2 flex w-full flex-row justify-evenly">

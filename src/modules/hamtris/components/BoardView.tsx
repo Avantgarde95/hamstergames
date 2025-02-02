@@ -2,12 +2,12 @@
 
 import { ReactNode, useContext } from "react";
 
-import { GameContext } from "@/modules/hamtris/stores/GameStore";
 import CellsView from "@/modules/hamtris/components/CellsView";
 import { mergeStyles } from "@/common/utils/StyleUtils";
+import GameContext from "@/modules/hamtris/components/GameContext";
 
 const BoardView = () => {
-  const gameStore = useContext(GameContext);
+  const { gameStore } = useContext(GameContext);
 
   const rows: Array<ReactNode> = [];
 
