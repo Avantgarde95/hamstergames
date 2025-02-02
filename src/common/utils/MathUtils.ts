@@ -1,3 +1,19 @@
+/**
+ * Similar to `[start, ..., limit - 1].map(job)`.
+ *
+ * @param start Included!
+ * @param limit Excluded!
+ */
+export function mapRange<Value>(start: number, limit: number, job: (index: number) => Value) {
+  const result: Array<Value> = [];
+
+  for (let i = start; i < limit; i++) {
+    result.push(job(i));
+  }
+
+  return result;
+}
+
 export function createMatrix<Value>(args: {
   width: number;
   height: number;
