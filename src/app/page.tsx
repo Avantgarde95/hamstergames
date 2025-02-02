@@ -1,7 +1,7 @@
 import SmartLink from "@/common/components/SmartLink";
 import allRoutes from "@/common/models/Routes";
 
-const iconStyle = "w-12 mr-4";
+const iconStyle = "w-14 mr-4";
 const linkStyle = "flex flex-row items-center p-2 hover:bg-slate-300 active:bg-slate-400";
 
 const Page = () => (

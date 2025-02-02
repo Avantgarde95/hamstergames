@@ -6,9 +6,10 @@ const linkStyle =
 
 const Page = () => (
   <div className="flex h-full w-full flex-row items-start overflow-auto p-4">
-    <div className="border-outset m-auto flex flex-col items-center justify-center border-4 bg-[#C0C0C0] px-8 py-12">
-      <div className="mb-4 font-mono text-xl">
-        <span className="text-3xl">🐹</span> Hamstersweeper
+    <div className="border-outset relative m-auto flex flex-col items-center justify-center border-4 bg-[#C0C0C0] px-8 py-12">
+      <div className="mb-4 font-mono text-lg">
+        <img src="/images/hamstersweeper.png" alt="Hamstersweeper" className="mr-4 inline-block w-12" />
+        Hamstersweeper
       </div>
       <SmartLink className={linkStyle} href={`${allRoutes.hamstersweeper.game}?difficulty=easy`}>
         🧀 Easy
@@ -19,8 +20,11 @@ const Page = () => (
       <SmartLink className={linkStyle} href={`${allRoutes.hamstersweeper.game}?difficulty=hard`}>
         🔥 Hard
       </SmartLink>
-      <SmartLink className={linkStyle} href={allRoutes.home}>
-        🏠 Home
+      <SmartLink
+        className="absolute left-0 top-0 flex flex-row items-center p-2 hover:bg-slate-300 active:bg-slate-400"
+        href={`${allRoutes.home}`}
+      >
+        ⬅️
       </SmartLink>
     </div>
   </div>
