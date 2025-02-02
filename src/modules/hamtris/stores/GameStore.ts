@@ -10,7 +10,7 @@ export interface BlockInfo {
   matrices: Array<Array<Array<0 | 1>>>;
 }
 
-const blockMap: Record<BlockType, BlockInfo> = {
+export const blockMap: Record<BlockType, BlockInfo> = {
   I: {
     matrices: [
       [
@@ -106,6 +106,7 @@ export default class GameStore {
   readonly boardWidth = 10;
   readonly boardHeight = 20;
 
+  @observable
   board: Array<Array<Cell>> = createMatrix({
     width: 10,
     height: 20,
@@ -114,14 +115,12 @@ export default class GameStore {
     }),
   });
 
-  currentBlock: {
+  @observable
+  fallingBlock: {
     type: BlockType;
     position: Position;
     rotation: number;
   } | null = null;
-
-  @observable
-  draw: Array<{ type: BlockType; position: Position; isPlaced: boolean }> = [];
 
   constructor() {
     makeObservable(this);
@@ -129,6 +128,7 @@ export default class GameStore {
     this.reset();
   }
 
+  @action
   reset() {
     for (let y = 0; y < this.boardHeight; y++) {
       for (let x = 0; x < this.boardWidth; x++) {
@@ -137,58 +137,6 @@ export default class GameStore {
       }
     }
 
-    // Test.
-    this.board[19][0].type = "I";
-    this.board[19][1].type = "O";
-    this.board[19][2].type = "Z";
-    this.board[19][3].type = "S";
-    this.board[19][4].type = "J";
-    this.board[19][5].type = "L";
-    this.board[19][6].type = "T";
-
-    this.currentBlock = {
-      type: "T",
-      position: { x: 5, y: 8 },
-      rotation: 3,
-    };
-
-    this.generateDraw();
-  }
-
-  @action
-  private generateDraw() {
-    this.draw = [];
-
-    for (let y = 0; y < this.boardHeight; y++) {
-      for (let x = 0; x < this.boardWidth; x++) {
-        const cell = this.board[y][x];
-
-        if (cell.type !== null) {
-          this.draw.push({ type: cell.type, position: { x, y }, isPlaced: true });
-        }
-      }
-    }
-
-    if (this.currentBlock !== null) {
-      const position = this.currentBlock.position;
-      const matrix = blockMap[this.currentBlock.type].matrices[this.currentBlock.rotation];
-
-      for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[0].length; x++) {
-          if (matrix[y][x] === 0) {
-            continue;
-          }
-
-          this.draw.push({
-            type: this.currentBlock.type,
-            position: {
-              x: position.x + x,
-              y: position.y + y,
-            },
-            isPlaced: false,
-          });
-        }
-      }
-    }
+    this.fallingBlock = null;
   }
 }
