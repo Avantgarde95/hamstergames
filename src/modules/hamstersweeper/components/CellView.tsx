@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useContext } from "react";
+import { ComponentProps, MouseEvent, ReactNode, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
 import { mergeStyles } from "@/common/utils/StyleUtils";
@@ -34,13 +34,27 @@ const NumberView = ({ value }: NumberViewProps) => {
   return <span className={`font-mono text-lg ${numberStyles[value - 1]}`}>{value}</span>;
 };
 
-interface ButtonProps {
+const Button = (props: ComponentProps<"button">) => (
+  <button
+    className={mergeStyles(
+      "border-outset flex h-full w-full flex-row items-center justify-center overflow-hidden border-2 bg-[#c0c0c0]",
+      { "active:opacity-0": !props.disabled }
+    )}
+    {...props}
+  />
+);
+
+interface CommonProps {
   position: Position;
-  flag: boolean;
 }
 
-const Button = observer(({ position, flag }: ButtonProps) => {
+const OnRunning = observer(({ position }: CommonProps) => {
   const { gameStore, uiStore } = useContext(GameContext);
+  const cell = gameStore.board[position.y][position.x];
+
+  if (cell.isOpen) {
+    return <NumberView value={cell.neighborMineCount} />;
+  }
 
   const handleClick = () => {
     if (uiStore.clickMode === "Open") {
@@ -56,34 +70,9 @@ const Button = observer(({ position, flag }: ButtonProps) => {
   };
 
   return (
-    <button
-      className={mergeStyles(
-        "border-outset flex h-full w-full flex-row items-center justify-center overflow-hidden border-2 bg-[#c0c0c0]",
-        {
-          "active:opacity-0": gameStore.status === "Running",
-        }
-      )}
-      onClick={handleClick}
-      onContextMenu={handleRightClick}
-      disabled={gameStore.status !== "Running"}
-    >
-      {flag && <Flag />}
-    </button>
-  );
-});
-
-interface CommonProps {
-  position: Position;
-}
-
-const OnRunning = observer(({ position }: CommonProps) => {
-  const { gameStore } = useContext(GameContext);
-  const cell = gameStore.board[position.y][position.x];
-
-  return cell.isOpen ? (
-    <NumberView value={cell.neighborMineCount} />
-  ) : (
-    <Button position={position} flag={cell.isFlagged} />
+    <Button onClick={handleClick} onContextMenu={handleRightClick}>
+      {cell.isFlagged && <Flag />}
+    </Button>
   );
 });
 
@@ -91,18 +80,22 @@ const OnWin = observer(({ position }: CommonProps) => {
   const { gameStore } = useContext(GameContext);
   const cell = gameStore.board[position.y][position.x];
 
-  return cell.isOpen ? (
-    <NumberView value={cell.neighborMineCount} />
-  ) : (
-    <Button position={position} flag={cell.hasMine} />
-  );
+  if (cell.isOpen) {
+    return <NumberView value={cell.neighborMineCount} />;
+  }
+
+  return <Button disabled>{cell.hasMine && <Flag />}</Button>;
 });
 
 const OnLose = observer(({ position }: CommonProps) => {
   const { gameStore } = useContext(GameContext);
   const cell = gameStore.board[position.y][position.x];
 
-  return cell.hasMine ? <Mine /> : <NumberView value={cell.neighborMineCount} />;
+  if (cell.hasMine) {
+    return <Mine />;
+  }
+
+  return <NumberView value={cell.neighborMineCount} />;
 });
 
 const CellView = observer(({ position }: CommonProps) => {
