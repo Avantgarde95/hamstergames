@@ -188,6 +188,19 @@ export default class GameStore {
     this.fallingBlock.rotation = nextRotation;
   }
 
+  @action
+  placeFallingBlock() {
+    if (this.fallingBlock === null) {
+      return;
+    }
+
+    for (const { x, y } of this.fallingBlockCellPositions) {
+      this.board[y][x].type = this.fallingBlock.type;
+    }
+
+    this.fallingBlock = null;
+  }
+
   /**
    * You should check `fallingBlock !== null` manually.
    */
