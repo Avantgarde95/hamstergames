@@ -119,6 +119,11 @@ export default class GameStore {
     rotation: number;
   } | null = null;
 
+  // Milliseconds.
+  private tickInterval: number = 1000;
+  private lastTime: number = 0;
+  private frameJob: number | null = null;
+
   // For 7-bag rule.
   private blockBag: Array<BlockType> = [];
 
@@ -127,6 +132,27 @@ export default class GameStore {
 
     this.reset();
     this.generateBlock();
+  }
+
+  startFrame() {
+    this.lastTime = Date.now();
+
+    this.frameJob = window.setInterval(() => {
+      const now = Date.now();
+
+      if (now - this.lastTime > this.tickInterval) {
+        this.lastTime += this.tickInterval;
+
+        // Frame content.
+        this.moveFallingBlock({ x: 0, y: 1 });
+      }
+    }, 1000 / 60);
+  }
+
+  stopFrame() {
+    if (this.frameJob !== null) {
+      window.clearInterval(this.frameJob);
+    }
   }
 
   @action

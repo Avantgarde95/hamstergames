@@ -1,5 +1,8 @@
 "use client";
 
+import { useContext, useEffect } from "react";
+import { observer } from "mobx-react-lite";
+
 import BoardView from "@/modules/hamstersweeper/components/BoardView";
 import GameStore from "@/modules/hamstersweeper/stores/GameStore";
 import UIStore from "@/modules/hamstersweeper/stores/UIStore";
@@ -22,6 +25,26 @@ const difficultyMap: Record<
   hard: { boardWidth: 16, boardHeight: 12, mineCount: 26 },
 };
 
+const Initializer = observer(() => {
+  const { gameStore, timerStore } = useContext(GameContext);
+
+  useEffect(() => {
+    timerStore.start();
+
+    return () => {
+      timerStore.stop();
+    };
+  }, [timerStore]);
+
+  useEffect(() => {
+    if (gameStore.status !== "Running") {
+      timerStore.stop();
+    }
+  }, [timerStore, gameStore.status]);
+
+  return null;
+});
+
 interface GameViewProps {
   difficulty: string;
 }
@@ -35,6 +58,7 @@ const GameView = ({ difficulty }: GameViewProps) => {
     <GameContext.Provider value={{ uiStore, timerStore, gameStore }}>
       <div className="flex h-full w-full flex-row items-start overflow-auto bg-white p-4">
         <div className="border-outset m-auto border-4 bg-[#C0C0C0] p-2 pt-0">
+          <Initializer />
           <Header />
           <StatusView />
           <BoardView />

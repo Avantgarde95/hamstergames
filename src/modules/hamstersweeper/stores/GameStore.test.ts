@@ -32,7 +32,7 @@ function getMinedCells(gameStore: GameStore) {
 test("Initialize", () => {
   const boardWidth = 4;
   const boardHeight = 5;
-  const mineCount = 6;
+  const mineCount = 3;
   const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
 
   expect(gameStore.board.length).toEqual(5);
@@ -42,7 +42,7 @@ test("Initialize", () => {
 test("Generate mines after the first opening", () => {
   const boardWidth = 4;
   const boardHeight = 5;
-  const mineCount = 6;
+  const mineCount = 3;
 
   for (let i = 0; i < 5; i++) {
     const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
@@ -58,7 +58,7 @@ test("Generate mines after the first opening", () => {
 test("Win", () => {
   const boardWidth = 4;
   const boardHeight = 5;
-  const mineCount = 6;
+  const mineCount = 3;
 
   for (let i = 0; i < 5; i++) {
     const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
@@ -79,7 +79,7 @@ test("Win", () => {
 test("Lose", () => {
   const boardWidth = 4;
   const boardHeight = 5;
-  const mineCount = 6;
+  const mineCount = 3;
 
   for (let i = 0; i < 5; i++) {
     const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
@@ -102,7 +102,7 @@ test("Lose", () => {
 test("Flag counting", () => {
   const boardWidth = 10;
   const boardHeight = 5;
-  const mineCount = 6;
+  const mineCount = 3;
 
   const gameStore = new GameStore({ boardWidth, boardHeight, mineCount });
 

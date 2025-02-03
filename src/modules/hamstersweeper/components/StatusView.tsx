@@ -1,27 +1,13 @@
 "use client";
 
 import { observer } from "mobx-react-lite";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import Counter from "@/modules/hamstersweeper/components/Counter";
 import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const StatusView = observer(() => {
   const { gameStore, timerStore } = useContext(GameContext);
-
-  useEffect(() => {
-    timerStore.start();
-
-    return () => {
-      timerStore.stop();
-    };
-  }, [timerStore]);
-
-  useEffect(() => {
-    if (gameStore.status !== "Running") {
-      timerStore.stop();
-    }
-  }, [timerStore, gameStore.status]);
 
   const handleClickRestart = () => {
     gameStore.reset();
