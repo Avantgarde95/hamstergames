@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 import { Vector2D } from "@/common/models/Math";
 import { mergeStyles } from "@/common/utils/StyleUtils";
 import useClient from "@/common/hooks/useClient";
-import { blockMap, BlockType } from "@/modules/hamtris/stores/GameStore";
+import { BlockType } from "@/modules/hamtris/stores/GameStore";
 import GameContext from "@/modules/hamtris/components/GameContext";
 
 const drawMap: Record<BlockType, { style: string; content: string }> = {
@@ -61,31 +61,24 @@ export const FallingBlockView = observer(() => {
     return null;
   }
 
-  const position = fallingBlock.position;
-  const matrix = blockMap[fallingBlock.type].matrices[fallingBlock.rotation];
-
   return (
     <>
-      {matrix.map((row, y) =>
-        row.map((value, x) => (
-          <Fragment key={`${x}-${y}`}>
-            {value === 1 && (
-              <div
-                className={mergeStyles(
-                  cellStyle,
-                  "absolute left-0 top-0 origin-top-left bg-opacity-45",
-                  drawMap[fallingBlock.type].style
-                )}
-                style={{
-                  transform: `translate(${1.5 * (x + position.x)}rem, ${1.5 * (y + position.y)}rem)`,
-                }}
-              >
-                {drawMap[fallingBlock.type].content}
-              </div>
+      {gameStore.fallingBlockCellPositions.map(({ x, y }) => (
+        <Fragment key={`${x}-${y}`}>
+          <div
+            className={mergeStyles(
+              cellStyle,
+              "absolute left-0 top-0 origin-top-left bg-opacity-45",
+              drawMap[fallingBlock.type].style
             )}
-          </Fragment>
-        ))
-      )}
+            style={{
+              transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
+            }}
+          >
+            {drawMap[fallingBlock.type].content}
+          </div>
+        </Fragment>
+      ))}
     </>
   );
 });

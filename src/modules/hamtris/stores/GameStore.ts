@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import { shuffle } from "lodash";
 
 import { createMatrix, rotateMatrixRight } from "@/common/utils/MathUtils";
@@ -12,7 +12,7 @@ export interface BlockInfo {
   matrices: Array<Matrix<0 | 1>>;
 }
 
-export const blockMap: Record<BlockType, BlockInfo> = {
+const blockMap: Record<BlockType, BlockInfo> = {
   I: {
     matrices: [
       [
@@ -147,6 +147,15 @@ export default class GameStore {
       return;
     }
 
+    for (const { x, y } of this.fallingBlockCellPositions) {
+      const cx = x + amount.x;
+      const cy = y + amount.y;
+
+      if (cx < 0 || cx >= this.boardWidth || cy < 0 || cy >= this.boardHeight) {
+        return;
+      }
+    }
+
     this.fallingBlock.position.x += amount.x;
     this.fallingBlock.position.y += amount.y;
   }
@@ -157,7 +166,61 @@ export default class GameStore {
       return;
     }
 
-    this.fallingBlock.rotation = (this.fallingBlock.rotation + 1) % 4;
+    const position = this.fallingBlock.position;
+    const nextRotation = (this.fallingBlock.rotation + 1) % 4;
+    const nextMatrix = blockMap[this.fallingBlock.type].matrices[nextRotation];
+
+    for (let y = 0; y < nextMatrix.length; y++) {
+      for (let x = 0; x < nextMatrix[0].length; x++) {
+        if (nextMatrix[y][x] !== 1) {
+          continue;
+        }
+
+        const cx = x + position.x;
+        const cy = y + position.y;
+
+        if (cx < 0 || cx >= this.boardWidth || cy < 0 || cy >= this.boardHeight) {
+          return;
+        }
+      }
+    }
+
+    this.fallingBlock.rotation = nextRotation;
+  }
+
+  /**
+   * You should check `fallingBlock !== null` manually.
+   */
+  @computed
+  get fallingBlockMatrix() {
+    if (this.fallingBlock === null) {
+      throw new Error("fallingBlock is null!");
+    }
+
+    return blockMap[this.fallingBlock.type].matrices[this.fallingBlock.rotation];
+  }
+
+  /**
+   * You should check `fallingBlock !== null` manually.
+   */
+  @computed
+  get fallingBlockCellPositions() {
+    if (this.fallingBlock === null) {
+      throw new Error("fallingBlock is null!");
+    }
+
+    const matrix = this.fallingBlockMatrix;
+    const cellPositions: Array<Vector2D> = [];
+
+    for (let y = 0; y < matrix.length; y++) {
+      for (let x = 0; x < matrix[0].length; x++) {
+        if (matrix[y][x] === 1) {
+          cellPositions.push({ x: this.fallingBlock.position.x + x, y: this.fallingBlock.position.y + y });
+        }
+      }
+    }
+
+    return cellPositions;
   }
 
   @action
