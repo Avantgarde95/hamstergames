@@ -2,7 +2,7 @@ import { action, makeObservable, observable } from "mobx";
 import { sampleSize } from "lodash-es";
 
 import { createMatrix } from "@/common/utils/MathUtils";
-import { Vector2D } from "@/common/models/Math";
+import { Matrix, Vector2D } from "@/common/models/Math";
 
 export interface Cell {
   hasMine: boolean;
@@ -21,7 +21,7 @@ export default class GameStore {
   readonly mineCount: number;
 
   @observable
-  board: Array<Array<Cell>> = [];
+  board: Matrix<Cell> = [];
 
   @observable
   status: "Running" | "Win" | "Lose" = "Running";
@@ -33,7 +33,7 @@ export default class GameStore {
   private isFirstOpen: boolean = false;
 
   // For pre-calculate neighbors' positions for each cell.
-  private neighbors: Array<Array<Array<Vector2D>>> = [];
+  private neighbors: Matrix<Array<Vector2D>> = [];
 
   constructor(args: { boardWidth: number; boardHeight: number; mineCount: number }) {
     this.boardWidth = args.boardWidth;
@@ -128,7 +128,7 @@ export default class GameStore {
   }
 
   private walkUntilNotZero(position: Vector2D) {
-    const isChecked: Array<Array<boolean>> = [];
+    const isChecked: Matrix<boolean> = [];
 
     for (let y = 0; y < this.boardHeight; y++) {
       const row: Array<boolean> = [];

@@ -2,14 +2,14 @@ import { action, makeObservable, observable } from "mobx";
 import { shuffle } from "lodash";
 
 import { createMatrix, rotateMatrixRight } from "@/common/utils/MathUtils";
-import { Vector2D } from "@/common/models/Math";
+import { Matrix, Vector2D } from "@/common/models/Math";
 
 export const blockTypeNames = ["I", "O", "Z", "S", "J", "L", "T"] as const;
 export type BlockType = (typeof blockTypeNames)[number];
 
 export interface BlockInfo {
   // Each matrix: For each angle.
-  matrices: Array<Array<Array<0 | 1>>>;
+  matrices: Array<Matrix<0 | 1>>;
 }
 
 export const blockMap: Record<BlockType, BlockInfo> = {
@@ -104,7 +104,7 @@ export default class GameStore {
   readonly boardHeight = 20;
 
   @observable
-  board: Array<Array<Cell>> = createMatrix({
+  board: Matrix<Cell> = createMatrix({
     width: 10,
     height: 20,
     initialValue: () => ({

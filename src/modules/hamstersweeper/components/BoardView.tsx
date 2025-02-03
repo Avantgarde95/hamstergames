@@ -1,13 +1,12 @@
 "use client";
 
 import { useContext } from "react";
-import { observer } from "mobx-react-lite";
 
 import CellView from "@/modules/hamstersweeper/components/CellView";
 import GameContext from "@/modules/hamstersweeper/components/GameContext";
 import { mapRange } from "@/common/utils/MathUtils";
 
-const BoardView = observer(() => {
+const BoardView = () => {
   const { gameStore } = useContext(GameContext);
 
   return (
@@ -21,6 +20,6 @@ const BoardView = observer(() => {
       ))}
     </div>
   );
-});
+};
 
 export default BoardView;

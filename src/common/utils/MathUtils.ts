@@ -1,4 +1,4 @@
-import { Vector2D } from "@/common/models/Math";
+import { Matrix, Vector2D } from "@/common/models/Math";
 
 /**
  * Similar to `[start, ..., limit - 1].map(job)`.
@@ -21,7 +21,7 @@ export function createMatrix<Value>(args: {
   height: number;
   initialValue: (position: Vector2D) => Value;
 }) {
-  const matrix: Array<Array<Value>> = [];
+  const matrix: Matrix<Value> = [];
 
   for (let y = 0; y < args.height; y++) {
     const row: Array<Value> = [];
@@ -36,7 +36,7 @@ export function createMatrix<Value>(args: {
   return matrix;
 }
 
-export function rotateMatrixRight<Value>(matrix: Array<Array<Value>>) {
+export function rotateMatrixRight<Value>(matrix: Matrix<Value>) {
   const width = matrix[0].length;
   const height = matrix.length;
 
