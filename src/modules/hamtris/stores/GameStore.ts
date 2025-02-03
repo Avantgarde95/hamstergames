@@ -1,6 +1,8 @@
 import { action, makeObservable, observable } from "mobx";
+import { shuffle } from "lodash";
 
 import { createMatrix, rotateMatrixRight } from "@/common/utils/MathUtils";
+import { Vector2D } from "@/common/models/Math";
 
 export const blockTypeNames = ["I", "O", "Z", "S", "J", "L", "T"] as const;
 export type BlockType = (typeof blockTypeNames)[number];
@@ -92,11 +94,6 @@ if (blockMap.I.matrices.length === 1) {
   console.log("Generated all rotations!");
 }
 
-export interface Position {
-  x: number;
-  y: number;
-}
-
 export interface Cell {
   // null = Empty.
   type: BlockType | null;
@@ -118,14 +115,18 @@ export default class GameStore {
   @observable
   fallingBlock: {
     type: BlockType;
-    position: Position;
+    position: Vector2D;
     rotation: number;
   } | null = null;
+
+  // For 7-bag rule.
+  private blockBag: Array<BlockType> = [];
 
   constructor() {
     makeObservable(this);
 
     this.reset();
+    this.generateBlock();
   }
 
   @action
@@ -138,5 +139,45 @@ export default class GameStore {
     }
 
     this.fallingBlock = null;
+  }
+
+  @action
+  moveFallingBlock(amount: Vector2D) {
+    if (this.fallingBlock === null) {
+      return;
+    }
+
+    this.fallingBlock.position.x += amount.x;
+    this.fallingBlock.position.y += amount.y;
+  }
+
+  @action
+  rotateFallingBlock() {
+    if (this.fallingBlock === null) {
+      return;
+    }
+
+    this.fallingBlock.rotation = (this.fallingBlock.rotation + 1) % 4;
+  }
+
+  @action
+  private generateBlock() {
+    if (this.blockBag.length <= 0) {
+      this.blockBag = shuffle(blockTypeNames);
+    }
+
+    const blockType = this.blockBag.pop()!;
+    const blockInfo = blockMap[blockType];
+    const rotation = 0;
+    const matrix = blockInfo.matrices[rotation];
+
+    const x = Math.floor((this.boardWidth - matrix[0].length) / 2);
+    const y = 0;
+
+    this.fallingBlock = {
+      type: blockType,
+      position: { x, y },
+      rotation,
+    };
   }
 }

@@ -2,11 +2,7 @@ import { action, makeObservable, observable } from "mobx";
 import { sampleSize } from "lodash-es";
 
 import { createMatrix } from "@/common/utils/MathUtils";
-
-export interface Position {
-  x: number;
-  y: number;
-}
+import { Vector2D } from "@/common/models/Math";
 
 export interface Cell {
   hasMine: boolean;
@@ -15,7 +11,7 @@ export interface Cell {
   isFlagged: boolean;
 }
 
-function positionToKey(position: Position) {
+function positionToKey(position: Vector2D) {
   return `${position.x}-${position.y}`;
 }
 
@@ -37,7 +33,7 @@ export default class GameStore {
   private isFirstOpen: boolean = false;
 
   // For pre-calculate neighbors' positions for each cell.
-  private neighbors: Array<Array<Array<Position>>> = [];
+  private neighbors: Array<Array<Array<Vector2D>>> = [];
 
   constructor(args: { boardWidth: number; boardHeight: number; mineCount: number }) {
     this.boardWidth = args.boardWidth;
@@ -74,7 +70,7 @@ export default class GameStore {
   }
 
   @action
-  openCell(position: Position) {
+  openCell(position: Vector2D) {
     if (this.status !== "Running") {
       return;
     }
@@ -113,7 +109,7 @@ export default class GameStore {
   }
 
   @action
-  flagCell(position: Position) {
+  flagCell(position: Vector2D) {
     if (this.status !== "Running") {
       return;
     }
@@ -131,7 +127,7 @@ export default class GameStore {
     }
   }
 
-  private walkUntilNotZero(position: Position) {
+  private walkUntilNotZero(position: Vector2D) {
     const isChecked: Array<Array<boolean>> = [];
 
     for (let y = 0; y < this.boardHeight; y++) {
@@ -147,8 +143,8 @@ export default class GameStore {
     isChecked[position.y][position.x] = true;
 
     // Stack-based DFS.
-    const stack: Array<Position> = [position];
-    const result: Array<Position> = [];
+    const stack: Array<Vector2D> = [position];
+    const result: Array<Vector2D> = [];
 
     while (stack.length > 0) {
       const currentPosition = stack.pop()!;
@@ -178,9 +174,9 @@ export default class GameStore {
   }
 
   @action
-  private generateMines(args: { exclude: Array<Position> }) {
+  private generateMines(args: { exclude: Array<Vector2D> }) {
     const excludeSet = new Set(args.exclude.map(positionToKey));
-    const positions: Array<Position> = [];
+    const positions: Array<Vector2D> = [];
 
     for (let y = 0; y < this.boardHeight; y++) {
       for (let x = 0; x < this.boardWidth; x++) {
@@ -203,7 +199,7 @@ export default class GameStore {
     }
   }
 
-  private getNeighbors(position: Position) {
+  private getNeighbors(position: Vector2D) {
     const diffs = [
       [0, 1],
       [0, -1],

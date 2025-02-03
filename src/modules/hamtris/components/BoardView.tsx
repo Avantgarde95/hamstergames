@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import { mapRange } from "@/common/utils/MathUtils";
 import GameContext from "@/modules/hamtris/components/GameContext";
@@ -8,6 +8,31 @@ import { FallingBlockView, PlacedCellView } from "@/modules/hamtris/components/C
 
 const BoardView = () => {
   const { gameStore } = useContext(GameContext);
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "ArrowLeft":
+          gameStore.moveFallingBlock({ x: -1, y: 0 });
+          break;
+        case "ArrowRight":
+          gameStore.moveFallingBlock({ x: 1, y: 0 });
+          break;
+        case "ArrowDown":
+          gameStore.moveFallingBlock({ x: 0, y: 1 });
+          break;
+        case "ArrowUp":
+          gameStore.rotateFallingBlock();
+          break;
+      }
+    };
+
+    document.addEventListener("keydown", handleKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [gameStore]);
 
   return (
     <div className="relative flex flex-col items-start">

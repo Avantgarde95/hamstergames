@@ -1,3 +1,5 @@
+import { Vector2D } from "@/common/models/Math";
+
 /**
  * Similar to `[start, ..., limit - 1].map(job)`.
  *
@@ -17,7 +19,7 @@ export function mapRange<Value>(start: number, limit: number, job: (index: numbe
 export function createMatrix<Value>(args: {
   width: number;
   height: number;
-  initialValue: (position: { x: number; y: number }) => Value;
+  initialValue: (position: Vector2D) => Value;
 }) {
   const matrix: Array<Array<Value>> = [];
 

@@ -1,8 +1,12 @@
+"use client";
+
 import { Fragment, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
+import { Vector2D } from "@/common/models/Math";
 import { mergeStyles } from "@/common/utils/StyleUtils";
-import { blockMap, BlockType, Position } from "@/modules/hamtris/stores/GameStore";
+import useClient from "@/common/hooks/useClient";
+import { blockMap, BlockType } from "@/modules/hamtris/stores/GameStore";
 import GameContext from "@/modules/hamtris/components/GameContext";
 
 const drawMap: Record<BlockType, { style: string; content: string }> = {
@@ -18,7 +22,7 @@ const drawMap: Record<BlockType, { style: string; content: string }> = {
 const cellStyle = "flex h-6 w-6 flex-row items-center justify-center overflow-hidden text-base";
 
 interface PlacedCellViewProps {
-  position: Position;
+  position: Vector2D;
 }
 
 export const PlacedCellView = observer(({ position }: PlacedCellViewProps) => {
@@ -43,7 +47,14 @@ export const PlacedCellView = observer(({ position }: PlacedCellViewProps) => {
 });
 
 export const FallingBlockView = observer(() => {
+  const { isClient } = useClient();
   const { gameStore } = useContext(GameContext);
+
+  // Since the block is randomly generated, we need this.
+  if (!isClient) {
+    return null;
+  }
+
   const fallingBlock = gameStore.fallingBlock;
 
   if (fallingBlock === null) {
@@ -60,8 +71,14 @@ export const FallingBlockView = observer(() => {
           <Fragment key={`${x}-${y}`}>
             {value === 1 && (
               <div
-                className={mergeStyles(cellStyle, "absolute bg-opacity-45", drawMap[fallingBlock.type].style)}
-                style={{ left: `${1.5 * (x + position.x)}rem`, top: `${1.5 * (y + position.y)}rem` }}
+                className={mergeStyles(
+                  cellStyle,
+                  "absolute left-0 top-0 origin-top-left bg-opacity-45",
+                  drawMap[fallingBlock.type].style
+                )}
+                style={{
+                  transform: `translate(${1.5 * (x + position.x)}rem, ${1.5 * (y + position.y)}rem)`,
+                }}
               >
                 {drawMap[fallingBlock.type].content}
               </div>

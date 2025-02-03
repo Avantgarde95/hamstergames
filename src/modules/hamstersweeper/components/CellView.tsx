@@ -3,8 +3,8 @@
 import { ComponentProps, MouseEvent, ReactNode, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
+import { Vector2D } from "@/common/models/Math";
 import { mergeStyles } from "@/common/utils/StyleUtils";
-import { Position } from "@/modules/hamstersweeper/stores/GameStore";
 import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const Mine = () => <span className="text-base">🐹</span>;
@@ -45,7 +45,7 @@ const Button = (props: ComponentProps<"button">) => (
 );
 
 interface CommonProps {
-  position: Position;
+  position: Vector2D;
 }
 
 const OnRunning = observer(({ position }: CommonProps) => {
