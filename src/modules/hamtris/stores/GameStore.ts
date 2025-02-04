@@ -123,6 +123,7 @@ export default class GameStore {
   private tickInterval: number = 1000;
   private lastTime: number = 0;
   private frameJob: number | null = null;
+  private readonly fps = 30;
 
   // For 7-bag rule.
   private blockBag: Array<BlockType> = [];
@@ -144,9 +145,15 @@ export default class GameStore {
         this.lastTime += this.tickInterval;
 
         // Frame content.
-        this.moveFallingBlock({ x: 0, y: 1 });
+        if (this.fallingBlock === null) {
+          this.generateBlock();
+        } else if (this.isFallingBlockAtBottom) {
+          this.placeFallingBlock();
+        } else {
+          this.moveFallingBlock({ x: 0, y: 1 });
+        }
       }
-    }, 1000 / 60);
+    }, 1000 / this.fps);
   }
 
   stopFrame() {
@@ -180,6 +187,10 @@ export default class GameStore {
       if (cx < 0 || cx >= this.boardWidth || cy < 0 || cy >= this.boardHeight) {
         return;
       }
+
+      if (this.board[cy][cx].type !== null) {
+        return;
+      }
     }
 
     this.fallingBlock.position.x += amount.x;
@@ -206,6 +217,10 @@ export default class GameStore {
         const cy = y + position.y;
 
         if (cx < 0 || cx >= this.boardWidth || cy < 0 || cy >= this.boardHeight) {
+          return;
+        }
+
+        if (this.board[cy][cx].type !== null) {
           return;
         }
       }
@@ -260,6 +275,25 @@ export default class GameStore {
     }
 
     return cellPositions;
+  }
+
+  @computed
+  get isFallingBlockAtBottom() {
+    if (this.fallingBlock === null) {
+      return false;
+    }
+
+    for (const { x, y } of this.fallingBlockCellPositions) {
+      if (y + 1 >= this.boardHeight) {
+        return true;
+      }
+
+      if (this.board[y + 1][x].type !== null) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @action
