@@ -95,8 +95,10 @@ if (blockMap.I.matrices.length === 1) {
 }
 
 export interface Cell {
+  // Used for React + CSS animation.
+  key: number;
   // null = Empty.
-  type: BlockType | null;
+  type: BlockType;
 }
 
 export default class GameStore {
@@ -104,12 +106,10 @@ export default class GameStore {
   readonly boardHeight = 20;
 
   @observable
-  board: Matrix<Cell> = createMatrix({
+  board: Matrix<Cell | null> = createMatrix({
     width: 10,
     height: 20,
-    initialValue: () => ({
-      type: null,
-    }),
+    initialValue: () => null,
   });
 
   @observable
@@ -127,6 +127,8 @@ export default class GameStore {
 
   // For 7-bag rule.
   private blockBag: Array<BlockType> = [];
+
+  private nextKey = 0;
 
   constructor() {
     makeObservable(this);
@@ -146,12 +148,15 @@ export default class GameStore {
 
         // Frame content.
         if (this.fallingBlock === null) {
-          this.generateBlock();
+          // Do nothing.
         } else if (this.isFallingBlockAtBottom) {
           this.placeFallingBlock();
+          this.generateBlock();
         } else {
           this.moveFallingBlock({ x: 0, y: 1 });
         }
+
+        this.removeLines();
       }
     }, 1000 / this.fps);
   }
@@ -166,8 +171,7 @@ export default class GameStore {
   reset() {
     for (let y = 0; y < this.boardHeight; y++) {
       for (let x = 0; x < this.boardWidth; x++) {
-        const cell = this.board[y][x];
-        cell.type = null;
+        this.board[y][x] = null;
       }
     }
 
@@ -181,14 +185,14 @@ export default class GameStore {
     }
 
     for (const { x, y } of this.fallingBlockCellPositions) {
-      const cx = x + amount.x;
-      const cy = y + amount.y;
+      const nextX = x + amount.x;
+      const nextY = y + amount.y;
 
-      if (cx < 0 || cx >= this.boardWidth || cy < 0 || cy >= this.boardHeight) {
+      if (nextX < 0 || nextX >= this.boardWidth || nextY < 0 || nextY >= this.boardHeight) {
         return;
       }
 
-      if (this.board[cy][cx].type !== null) {
+      if (this.board[nextY][nextX] !== null) {
         return;
       }
     }
@@ -213,14 +217,14 @@ export default class GameStore {
           continue;
         }
 
-        const cx = x + position.x;
-        const cy = y + position.y;
+        const nextX = x + position.x;
+        const nextY = y + position.y;
 
-        if (cx < 0 || cx >= this.boardWidth || cy < 0 || cy >= this.boardHeight) {
+        if (nextX < 0 || nextX >= this.boardWidth || nextY < 0 || nextY >= this.boardHeight) {
           return;
         }
 
-        if (this.board[cy][cx].type !== null) {
+        if (this.board[nextY][nextX] !== null) {
           return;
         }
       }
@@ -236,10 +240,41 @@ export default class GameStore {
     }
 
     for (const { x, y } of this.fallingBlockCellPositions) {
-      this.board[y][x].type = this.fallingBlock.type;
+      this.board[y][x] = {
+        key: this.nextKey,
+        type: this.fallingBlock.type,
+      };
+
+      this.nextKey++;
     }
 
     this.fallingBlock = null;
+  }
+
+  @action
+  removeLines() {
+    let hadLine = false;
+
+    for (let y = 0; y < this.boardHeight; y++) {
+      const isLine = this.board[y].every(cell => cell !== null);
+
+      if (isLine) {
+        hadLine = true;
+
+        for (let x = 0; x < this.boardWidth; x++) {
+          this.board[y][x] = null;
+        }
+
+        for (let y1 = y - 1; y1 >= 0; y1--) {
+          this.board[y1 + 1] = this.board[y1].slice();
+          this.board[y1].fill(null);
+        }
+      }
+    }
+
+    if (hadLine) {
+      this.removeLines();
+    }
   }
 
   /**
@@ -277,18 +312,17 @@ export default class GameStore {
     return cellPositions;
   }
 
+  /**
+   * You should check `fallingBlock !== null` manually.
+   */
   @computed
   get isFallingBlockAtBottom() {
-    if (this.fallingBlock === null) {
-      return false;
-    }
-
     for (const { x, y } of this.fallingBlockCellPositions) {
       if (y + 1 >= this.boardHeight) {
         return true;
       }
 
-      if (this.board[y + 1][x].type !== null) {
+      if (this.board[y + 1][x] !== null) {
         return true;
       }
     }

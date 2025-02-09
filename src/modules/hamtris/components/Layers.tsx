@@ -3,10 +3,9 @@
 import { Fragment, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
-import { Vector2D } from "@/common/models/Math";
 import { mergeStyles } from "@/common/utils/StyleUtils";
 import useClient from "@/common/hooks/useClient";
-import { BlockType } from "@/modules/hamtris/stores/GameStore";
+import { BlockType, Cell } from "@/modules/hamtris/stores/GameStore";
 import GameContext from "@/modules/hamtris/components/GameContext";
 
 const drawMap: Record<BlockType, { style: string; content: string }> = {
@@ -19,34 +18,42 @@ const drawMap: Record<BlockType, { style: string; content: string }> = {
   T: { style: "bg-[#882ced]", content: "🦄" },
 };
 
-const cellStyle = "flex h-6 w-6 flex-row items-center justify-center overflow-hidden text-base";
+const cellStyle =
+  "flex h-6 w-6 flex-row items-center justify-center overflow-hidden text-base absolute left-0 top-0 origin-top-left";
 
-interface PlacedCellViewProps {
-  position: Vector2D;
-}
-
-export const PlacedCellView = observer(({ position }: PlacedCellViewProps) => {
+export const PlacedCellsLayer = observer(() => {
   const { gameStore } = useContext(GameContext);
-  const cell = gameStore.board[position.y][position.x];
+
+  const cells: Array<[number, number, Exclude<Cell, { type: null }>]> = [];
+
+  for (let y = 0; y < gameStore.boardHeight; y++) {
+    for (let x = 0; x < gameStore.boardWidth; x++) {
+      const cell = gameStore.board[y][x];
+
+      if (cell !== null) {
+        cells.push([x, y, cell]);
+      }
+    }
+  }
 
   return (
-    <div
-      className={mergeStyles(
-        cellStyle,
-        "relative border-b-[1px] border-r-[1px] border-gray-400 bg-opacity-25",
-        cell.type && drawMap[cell.type].style,
-        {
-          "border-t-[1px]": position.y === 0,
-          "border-l-[1px]": position.x === 0,
-        }
-      )}
-    >
-      {cell.type && drawMap[cell.type].content}
-    </div>
+    <>
+      {cells.map(([x, y, cell]) => (
+        <div
+          key={cell.key}
+          className={mergeStyles(cellStyle, "bg-opacity-25 transition-transform", drawMap[cell.type].style)}
+          style={{
+            transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
+          }}
+        >
+          {drawMap[cell.type].content}
+        </div>
+      ))}
+    </>
   );
 });
 
-export const FallingBlockView = observer(() => {
+export const FallingBlockLayer = observer(() => {
   const { isClient } = useClient();
   const { gameStore } = useContext(GameContext);
 
@@ -66,11 +73,7 @@ export const FallingBlockView = observer(() => {
       {gameStore.fallingBlockCellPositions.map(({ x, y }) => (
         <Fragment key={`${x}-${y}`}>
           <div
-            className={mergeStyles(
-              cellStyle,
-              "absolute left-0 top-0 origin-top-left bg-opacity-45",
-              drawMap[fallingBlock.type].style
-            )}
+            className={mergeStyles(cellStyle, "bg-opacity-45", drawMap[fallingBlock.type].style)}
             style={{
               transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
             }}

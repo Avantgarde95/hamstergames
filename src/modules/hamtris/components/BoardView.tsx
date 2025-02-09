@@ -4,7 +4,8 @@ import { useContext, useEffect } from "react";
 
 import { mapRange } from "@/common/utils/MathUtils";
 import GameContext from "@/modules/hamtris/components/GameContext";
-import { FallingBlockView, PlacedCellView } from "@/modules/hamtris/components/CellViews";
+import { FallingBlockLayer, PlacedCellsLayer } from "@/modules/hamtris/components/Layers";
+import { mergeStyles } from "@/common/utils/StyleUtils";
 
 const BoardView = () => {
   const { gameStore } = useContext(GameContext);
@@ -36,11 +37,21 @@ const BoardView = () => {
 
   return (
     <div className="relative flex flex-col items-start">
-      <FallingBlockView />
+      <PlacedCellsLayer />
+      <FallingBlockLayer />
       {mapRange(0, gameStore.boardHeight, y => (
         <div key={y} className="flex flex-row items-start">
           {mapRange(0, gameStore.boardWidth, x => (
-            <PlacedCellView key={x} position={{ x, y }} />
+            <div
+              key={x}
+              className={mergeStyles(
+                "relative z-10 h-6 w-6 border-b-[1px] border-r-[1px] border-gray-400 bg-opacity-25",
+                {
+                  "border-t-[1px]": y === 0,
+                  "border-l-[1px]": x === 0,
+                }
+              )}
+            />
           ))}
         </div>
       ))}
