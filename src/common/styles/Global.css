@@ -18,6 +18,51 @@
   .border-inset {
     border-style: inset;
   }
+
+  .bubbles-setup::before,
+  .bubbles-setup::after {
+    display: none;
+    content: "";
+    position: absolute;
+    width: 140%;
+    height: 100%;
+    left: -20%;
+    background-repeat: no-repeat;
+  }
+
+  .bubbles-setup::before {
+    top: -75%;
+    background-image: radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, transparent 20%, var(--bubbles-color) 20%, transparent 30%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, transparent 10%, var(--bubbles-color) 15%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%);
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+  }
+
+  .bubbles-setup::after {
+    bottom: -75%;
+    background-image: radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, transparent 10%, var(--bubbles-color) 15%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
+      radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%);
+    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+  }
+
+  .bubbles-show:before {
+    display: block;
+  }
+
+  .bubbles-show:after {
+    display: block;
+  }
 }
 
 @layer {

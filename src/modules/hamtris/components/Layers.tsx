@@ -2,24 +2,25 @@
 
 import { Fragment, useContext } from "react";
 import { observer } from "mobx-react-lite";
+import { TransitionGroup } from "react-transition-group";
 
 import { mergeStyles } from "@/common/utils/StyleUtils";
 import useClient from "@/common/hooks/useClient";
 import { BlockType, Cell } from "@/modules/hamtris/stores/GameStore";
 import GameContext from "@/modules/hamtris/components/GameContext";
+import { TransitionWithRef } from "@/common/components/Transition";
 
-const drawMap: Record<BlockType, { style: string; content: string }> = {
-  I: { style: "bg-[#00f0f0]", content: "🔎" },
-  O: { style: "bg-[#f1ef2f]", content: "🐹" },
-  Z: { style: "bg-[#cf3616]", content: "🍟" },
-  S: { style: "bg-[#8aea28]", content: "🌳" },
-  J: { style: "bg-[#0000f0]", content: "🐟" },
-  L: { style: "bg-[#dda422]", content: "🧀" },
-  T: { style: "bg-[#882ced]", content: "🦄" },
+const drawMap: Record<BlockType, { color: string; content: string }> = {
+  I: { color: "#00f0f0", content: "🔎" },
+  O: { color: "#f1ef2f", content: "🐹" },
+  Z: { color: "#cf3616", content: "🍟" },
+  S: { color: "#8aea28", content: "🌳" },
+  J: { color: "#0000f0", content: "🐟" },
+  L: { color: "#dda422", content: "🧀" },
+  T: { color: "#882ced", content: "🦄" },
 };
 
-const cellStyle =
-  "flex h-6 w-6 flex-row items-center justify-center overflow-hidden text-base absolute left-0 top-0 origin-top-left";
+const cellStyle = "flex h-6 w-6 flex-row items-center justify-center text-base absolute left-0 top-0 origin-top-left";
 
 export const PlacedCellsLayer = observer(() => {
   const { gameStore } = useContext(GameContext);
@@ -37,19 +38,38 @@ export const PlacedCellsLayer = observer(() => {
   }
 
   return (
-    <>
+    <TransitionGroup component={null}>
       {cells.map(([x, y, cell]) => (
-        <div
-          key={cell.key}
-          className={mergeStyles(cellStyle, "bg-opacity-25 transition-transform", drawMap[cell.type].style)}
-          style={{
-            transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
+        <TransitionWithRef<HTMLDivElement> key={cell.key} timeout={300}>
+          {({ state, ref }) => {
+            const showContent = state === "entered" || state === "entering";
+            const showAnimation = state === "exiting";
+
+            const cssVariables = {
+              "--cell-color": drawMap[cell.type].color + "4c",
+              "--bubbles-color": drawMap[cell.type].color,
+            };
+
+            return (
+              <div
+                ref={ref}
+                className={mergeStyles(cellStyle, "bubbles-setup transition-transform", {
+                  "bubbles-show before:animate-[pop-top-bubbles_ease-in-out_0.75s_forwards] after:animate-[pop-bottom-bubbles_ease-in-out_0.75s_forwards]":
+                    showAnimation,
+                  "bg-[var(--cell-color)]": showContent,
+                })}
+                style={{
+                  transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
+                  ...cssVariables,
+                }}
+              >
+                {showContent && drawMap[cell.type].content}
+              </div>
+            );
           }}
-        >
-          {drawMap[cell.type].content}
-        </div>
+        </TransitionWithRef>
       ))}
-    </>
+    </TransitionGroup>
   );
 });
 
@@ -68,14 +88,19 @@ export const FallingBlockLayer = observer(() => {
     return null;
   }
 
+  const cssVariables = {
+    "--cell-color": drawMap[fallingBlock.type].color + "7f",
+  };
+
   return (
     <>
       {gameStore.fallingBlockCellPositions.map(({ x, y }) => (
         <Fragment key={`${x}-${y}`}>
           <div
-            className={mergeStyles(cellStyle, "bg-opacity-45", drawMap[fallingBlock.type].style)}
+            className={mergeStyles(cellStyle, "bg-[var(--cell-color)]")}
             style={{
               transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
+              ...cssVariables,
             }}
           >
             {drawMap[fallingBlock.type].content}

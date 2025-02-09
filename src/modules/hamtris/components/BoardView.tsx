@@ -44,13 +44,10 @@ const BoardView = () => {
           {mapRange(0, gameStore.boardWidth, x => (
             <div
               key={x}
-              className={mergeStyles(
-                "relative z-10 h-6 w-6 border-b-[1px] border-r-[1px] border-gray-400 bg-opacity-25",
-                {
-                  "border-t-[1px]": y === 0,
-                  "border-l-[1px]": x === 0,
-                }
-              )}
+              className={mergeStyles("relative z-10 h-6 w-6 border-b-[1px] border-r-[1px] border-gray-400", {
+                "border-t-[1px]": y === 0,
+                "border-l-[1px]": x === 0,
+              })}
             />
           ))}
         </div>
