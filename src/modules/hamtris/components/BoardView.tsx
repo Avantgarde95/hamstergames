@@ -3,9 +3,10 @@
 import { useContext, useEffect } from "react";
 
 import { mapRange } from "@/common/utils/MathUtils";
+import { mergeStyles } from "@/common/utils/StyleUtils";
 import GameContext from "@/modules/hamtris/components/GameContext";
 import { FallingBlockLayer, PlacedCellsLayer } from "@/modules/hamtris/components/Layers";
-import { mergeStyles } from "@/common/utils/StyleUtils";
+import StartView from "@/modules/hamtris/components/StartView";
 
 const BoardView = () => {
   const { gameStore } = useContext(GameContext);
@@ -52,6 +53,7 @@ const BoardView = () => {
           ))}
         </div>
       ))}
+      <StartView />
     </div>
   );
 };

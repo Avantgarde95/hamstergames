@@ -14,10 +14,9 @@ import { mergeStyles } from "@/common/utils/StyleUtils";
 const Initializer = () => {
   const { gameStore, stopwatchStore } = useContext(GameContext);
 
-  // Test.
-  // TODO: Start after interaction.
+  /* eslint-disable arrow-body-style */
   useEffect(() => {
-    gameStore.startFrame();
+    // Do nothing.
 
     return () => {
       gameStore.stopFrame();
@@ -25,12 +24,13 @@ const Initializer = () => {
   }, [gameStore]);
 
   useEffect(() => {
-    stopwatchStore.start();
+    // Do nothing.
 
     return () => {
       stopwatchStore.stop();
     };
   }, [stopwatchStore]);
+  /* eslint-enable arrow-body-style */
 
   return null;
 };

@@ -137,11 +137,11 @@ export default class GameStore {
     makeObservable(this);
 
     this.reset();
-    this.generateBlock();
   }
 
   startFrame() {
     this.lastTime = Date.now();
+    this.generateBlock();
 
     this.frameJob = window.setInterval(() => {
       const now = Date.now();
