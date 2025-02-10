@@ -8,6 +8,8 @@ import Header from "@/modules/hamtris/components/Header";
 import GameStore from "@/modules/hamtris/stores/GameStore";
 import StopwatchStore from "@/common/stores/StopwatchStore";
 import StatusView from "@/modules/hamtris/components/StatusView";
+import { backgroundStyle } from "@/modules/hamtris/styles/Common";
+import { mergeStyles } from "@/common/utils/StyleUtils";
 
 const Initializer = () => {
   const { gameStore, stopwatchStore } = useContext(GameContext);
@@ -39,7 +41,7 @@ const GameView = () => {
 
   return (
     <GameContext.Provider value={{ gameStore, stopwatchStore }}>
-      <div className="flex h-full w-full flex-row items-start bg-black p-4">
+      <div className={mergeStyles("flex h-full w-full flex-row items-start p-4", backgroundStyle)}>
         <div className="m-auto">
           <Initializer />
           <Header />

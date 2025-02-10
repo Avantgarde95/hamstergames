@@ -13,7 +13,7 @@ import { TransitionWithRef } from "@/common/components/Transition";
 const drawMap: Record<BlockType, { color: string; content: string }> = {
   I: { color: "#00f0f0", content: "🔎" },
   O: { color: "#f1ef2f", content: "🐹" },
-  Z: { color: "#cf3616", content: "🍟" },
+  Z: { color: "#cf5716", content: "🍟" },
   S: { color: "#8aea28", content: "🌳" },
   J: { color: "#0000f0", content: "🐟" },
   L: { color: "#dda422", content: "🧀" },
@@ -89,7 +89,7 @@ export const FallingBlockLayer = observer(() => {
   }
 
   const cssVariables = {
-    "--cell-color": drawMap[fallingBlock.type].color + "7f",
+    "--cell-color": drawMap[fallingBlock.type].color + "6f",
   };
 
   return (
