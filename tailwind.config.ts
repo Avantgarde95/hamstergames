@@ -11,10 +11,6 @@ export default {
         mono: ["Fira Code", "Pretendard", "monospace"],
       },
       keyframes: {
-        "fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
         // https://www.cssscript.com/bubble-confetti-effect-button/
         "pop-top-bubbles": {
           "0%": {

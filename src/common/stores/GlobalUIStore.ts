@@ -24,8 +24,10 @@ export default class GlobalUIStore {
 
   @action
   destroyDialog() {
-    this.dialogTitle = "";
-    this.dialogContent = null;
     this.openDialog = false;
+
+    // We don't erase the contents, since the dialog is destroyed AFTER animation.
+    // this.dialogTitle = "";
+    // this.dialogContent = null;
   }
 }
