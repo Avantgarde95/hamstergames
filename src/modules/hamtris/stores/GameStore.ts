@@ -119,6 +119,9 @@ export default class GameStore {
     rotation: number;
   } | null = null;
 
+  @observable
+  score: number = 0;
+
   // Milliseconds.
   private tickInterval: number = 1000;
   private lastTime: number = 0;
@@ -168,7 +171,9 @@ export default class GameStore {
   }
 
   @action
-  reset() {
+  private reset() {
+    this.stopFrame();
+
     for (let y = 0; y < this.boardHeight; y++) {
       for (let x = 0; x < this.boardWidth; x++) {
         this.board[y][x] = null;
@@ -176,6 +181,11 @@ export default class GameStore {
     }
 
     this.fallingBlock = null;
+    this.score = 0;
+    this.lastTime = 0;
+    this.frameJob = null;
+    this.blockBag = [];
+    this.nextKey = 0;
   }
 
   @action
@@ -260,6 +270,7 @@ export default class GameStore {
 
       if (isLine) {
         hadLine = true;
+        this.score += 100;
 
         for (let x = 0; x < this.boardWidth; x++) {
           this.board[y][x] = null;
