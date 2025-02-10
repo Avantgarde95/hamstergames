@@ -7,7 +7,6 @@ import GameContext from "@/modules/hamtris/components/GameContext";
 import Header from "@/modules/hamtris/components/Header";
 import GameStore from "@/modules/hamtris/stores/GameStore";
 import StopwatchStore from "@/common/stores/StopwatchStore";
-import StatusView from "@/modules/hamtris/components/StatusView";
 import { backgroundStyle } from "@/modules/hamtris/styles/Common";
 import { mergeStyles } from "@/common/utils/StyleUtils";
 import Footer from "@/modules/hamtris/components/Footer";
@@ -46,7 +45,6 @@ const GameView = () => {
         <div className="m-auto">
           <Initializer />
           <Header />
-          <StatusView />
           <BoardView />
           <Footer />
         </div>

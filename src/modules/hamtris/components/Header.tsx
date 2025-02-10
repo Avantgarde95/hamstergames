@@ -3,6 +3,7 @@ import { useContext } from "react";
 
 import GlobalContext from "@/common/components/GlobalContext";
 import allRoutes from "@/common/models/Routes";
+import StatusView from "@/modules/hamtris/components/StatusView";
 
 const outerButtonStyle = "h-8 w-8 text-lg hover:bg-slate-700 active:bg-slate-700 relative z-[3]";
 
@@ -24,10 +25,11 @@ const Header = () => {
   };
 
   return (
-    <div className="relative flex w-full flex-row items-start">
+    <div className="relative flex w-full flex-row items-center">
       <button className={`${outerButtonStyle} mr-auto`} onClick={handleClickBack}>
         ⬅️
       </button>
+      <StatusView />
       <button className={outerButtonStyle} onClick={handleClickHelp}>
         ❓
       </button>

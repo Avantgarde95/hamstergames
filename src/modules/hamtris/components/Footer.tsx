@@ -31,11 +31,11 @@ const Footer = () => {
       <button className={buttonStyle} onClick={handleClickLeft}>
         ⬅️
       </button>
-      <button className={buttonStyle} onClick={handleClickRotate}>
-        ↩️
-      </button>
       <button className={buttonStyle} onClick={handleClickDown}>
         ⏬
+      </button>
+      <button className={buttonStyle} onClick={handleClickRotate}>
+        ↩️
       </button>
       <button className={buttonStyle} onClick={handleClickRight}>
         ➡️

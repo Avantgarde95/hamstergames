@@ -20,7 +20,7 @@ const StatusView = observer(() => {
   } as CSSProperties;
 
   return (
-    <div className="mb-1 flex w-full flex-row items-center font-mono text-white" style={cssVariables}>
+    <div className="mx-1 flex flex-1 flex-row items-center font-mono text-white" style={cssVariables}>
       <span
         key={gameStore.score}
         className={mergeStyles("bubbles-setup relative", {
