@@ -13,12 +13,12 @@ const winMessages = ["Win!", "Nice!", "Thanks!", "Good!"];
 const loseMessages = ["Ouch!", "It hurts!", "Lose!", "Try again!"];
 
 const Result = observer(() => {
-  const { gameStore, timerStore } = useContext(GameContext);
+  const { gameStore, stopwatchStore } = useContext(GameContext);
 
   let result: ReactNode = "";
 
   if (gameStore.status === "Win") {
-    const time = Math.floor(timerStore.time / 1000);
+    const time = Math.floor(stopwatchStore.time / 1000);
     const minutes = `${Math.floor(time / 60)}`.padStart(2, "0");
     const seconds = `${time % 60}`.padStart(2, "0");
     result = `${sample(winMessages)} (${minutes}:${seconds})`;

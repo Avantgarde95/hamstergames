@@ -7,12 +7,12 @@ import Counter from "@/modules/hamstersweeper/components/Counter";
 import GameContext from "@/modules/hamstersweeper/components/GameContext";
 
 const StatusView = observer(() => {
-  const { gameStore, timerStore } = useContext(GameContext);
+  const { gameStore, stopwatchStore } = useContext(GameContext);
 
   const handleClickRestart = () => {
     gameStore.reset();
-    timerStore.stop();
-    timerStore.start();
+    stopwatchStore.stop();
+    stopwatchStore.start();
   };
 
   return (
@@ -27,7 +27,7 @@ const StatusView = observer(() => {
           {gameStore.status === "Win" ? "❤️" : gameStore.status === "Lose" ? "💧" : null}
         </span>
       </button>
-      <Counter value={Math.floor(timerStore.time / 1000)} />
+      <Counter value={Math.floor(stopwatchStore.time / 1000)} />
     </div>
   );
 });

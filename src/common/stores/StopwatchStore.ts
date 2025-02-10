@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
 
-export default class TimerStore {
+export default class StopwatchStore {
   private interval: number;
 
   private startTime: number;
@@ -25,13 +25,11 @@ export default class TimerStore {
 
   @action
   start() {
+    // For safety.
+    this.clearJob();
+
     this.startTime = this.getNow();
     this.time = 0;
-
-    // For safety.
-    if (this.job !== null) {
-      window.clearInterval(this.job);
-    }
 
     // When we use setInterval(), TypeScript sometimes uses Node.js's setInterval() instead of browser's, and we get a type error.
     // So we put "window.".
@@ -41,16 +39,19 @@ export default class TimerStore {
       });
     }, this.interval);
 
-    console.log("Timer started");
+    console.log("Stopwatch started");
   }
 
   stop() {
+    this.clearJob();
+    console.log("Stopwatch stopped");
+  }
+
+  private clearJob() {
     if (this.job !== null) {
       window.clearInterval(this.job);
       this.job = null;
     }
-
-    console.log("Timer stopped");
   }
 
   private getNow() {
