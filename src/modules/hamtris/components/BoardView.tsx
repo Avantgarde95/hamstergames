@@ -15,16 +15,16 @@ const BoardView = () => {
     const handleKey = (event: KeyboardEvent) => {
       switch (event.key) {
         case "ArrowLeft":
-          gameStore.moveFallingBlock({ x: -1, y: 0 });
+          gameStore.requestLeft();
           break;
         case "ArrowRight":
-          gameStore.moveFallingBlock({ x: 1, y: 0 });
+          gameStore.requestRight();
           break;
         case "ArrowDown":
-          gameStore.moveFallingBlock({ x: 0, y: 1 });
+          gameStore.requestDown();
           break;
         case "ArrowUp":
-          gameStore.rotateFallingBlock();
+          gameStore.requestRotate();
           break;
       }
     };

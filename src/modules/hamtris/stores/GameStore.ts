@@ -188,8 +188,24 @@ export default class GameStore {
     this.nextKey = 0;
   }
 
+  requestLeft() {
+    this.moveFallingBlock({ x: -1, y: 0 });
+  }
+
+  requestRight() {
+    this.moveFallingBlock({ x: 1, y: 0 });
+  }
+
+  requestDown() {
+    this.moveFallingBlock({ x: 0, y: 1 });
+  }
+
+  requestRotate() {
+    this.rotateFallingBlock();
+  }
+
   @action
-  moveFallingBlock(amount: Vector2D) {
+  private moveFallingBlock(amount: Vector2D) {
     if (this.fallingBlock === null) {
       return;
     }
@@ -212,7 +228,7 @@ export default class GameStore {
   }
 
   @action
-  rotateFallingBlock() {
+  private rotateFallingBlock() {
     if (this.fallingBlock === null) {
       return;
     }
