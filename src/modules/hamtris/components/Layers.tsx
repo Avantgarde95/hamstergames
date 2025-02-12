@@ -9,6 +9,7 @@ import useClient from "@/common/hooks/useClient";
 import { BlockType, Cell } from "@/modules/hamtris/stores/GameStore";
 import GameContext from "@/modules/hamtris/components/GameContext";
 import { TransitionWithRef } from "@/common/components/Transition";
+import { cellSizeRem, cellSizeStyle } from "@/modules/hamtris/styles/Common";
 
 const drawMap: Record<BlockType, { color: string; content: string }> = {
   I: { color: "#00f0f0", content: "🔎" },
@@ -20,7 +21,9 @@ const drawMap: Record<BlockType, { color: string; content: string }> = {
   T: { color: "#882ced", content: "🦄" },
 };
 
-const cellStyle = "flex h-6 w-6 flex-row items-center justify-center text-base absolute left-0 top-0 origin-top-left";
+const cellStyle = mergeStyles("absolute left-0 top-0 origin-top-left", cellSizeStyle);
+
+const contentStyle = "flex flex-row items-center justify-center w-full h-full overflow-hidden text-xs";
 
 export const PlacedCellsLayer = observer(() => {
   const { gameStore } = useContext(GameContext);
@@ -59,11 +62,11 @@ export const PlacedCellsLayer = observer(() => {
                   "bg-[var(--cell-color)]": showContent,
                 })}
                 style={{
-                  transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
+                  transform: `translate(${cellSizeRem * x}rem, ${cellSizeRem * y}rem)`,
                   ...cssVariables,
                 }}
               >
-                {showContent && drawMap[cell.type].content}
+                <div className={contentStyle}>{showContent && drawMap[cell.type].content}</div>
               </div>
             );
           }}
@@ -99,11 +102,11 @@ export const FallingBlockLayer = observer(() => {
           <div
             className={mergeStyles(cellStyle, "bg-[var(--cell-color)]")}
             style={{
-              transform: `translate(${1.5 * x}rem, ${1.5 * y}rem)`,
+              transform: `translate(${cellSizeRem * x}rem, ${cellSizeRem * y}rem)`,
               ...cssVariables,
             }}
           >
-            {drawMap[fallingBlock.type].content}
+            <div className={contentStyle}>{drawMap[fallingBlock.type].content}</div>
           </div>
         </Fragment>
       ))}

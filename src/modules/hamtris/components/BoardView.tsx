@@ -7,6 +7,7 @@ import { mergeStyles } from "@/common/utils/StyleUtils";
 import GameContext from "@/modules/hamtris/components/GameContext";
 import { FallingBlockLayer, PlacedCellsLayer } from "@/modules/hamtris/components/Layers";
 import StartView from "@/modules/hamtris/components/StartView";
+import { cellSizeStyle } from "@/modules/hamtris/styles/Common";
 
 const BoardView = () => {
   const { gameStore } = useContext(GameContext);
@@ -45,7 +46,7 @@ const BoardView = () => {
           {mapRange(0, gameStore.boardWidth, x => (
             <div
               key={x}
-              className={mergeStyles("relative z-10 h-6 w-6 border-b-[1px] border-r-[1px] border-gray-200", {
+              className={mergeStyles("relative z-10 border-b-[1px] border-r-[1px] border-gray-200", cellSizeStyle, {
                 "border-t-[1px]": y === 0,
                 "border-l-[1px]": x === 0,
               })}
