@@ -7,7 +7,8 @@ import { mergeStyles } from "@/common/utils/StyleUtils";
 import GameContext from "@/modules/hamtris/components/GameContext";
 import { FallingBlockLayer, PlacedCellsLayer } from "@/modules/hamtris/components/Layers";
 import StartView from "@/modules/hamtris/components/StartView";
-import { cellSizeStyle } from "@/modules/hamtris/styles/Common";
+import { backgroundStyle, cellSizeStyle } from "@/modules/hamtris/styles/Common";
+import Control from "@/modules/hamtris/components/Control";
 
 const BoardView = () => {
   const { gameStore } = useContext(GameContext);
@@ -38,7 +39,9 @@ const BoardView = () => {
   }, [gameStore]);
 
   return (
-    <div className="relative flex flex-col items-start">
+    <div className="relative mb-[3rem] flex flex-col items-start">
+      <Control />
+      <div className={mergeStyles("absolute h-full w-full", backgroundStyle)} />
       <PlacedCellsLayer />
       <FallingBlockLayer />
       {mapRange(0, gameStore.boardHeight, y => (

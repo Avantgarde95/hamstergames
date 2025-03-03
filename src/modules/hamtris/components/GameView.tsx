@@ -9,7 +9,6 @@ import GameStore from "@/modules/hamtris/stores/GameStore";
 import StopwatchStore from "@/common/stores/StopwatchStore";
 import { backgroundStyle } from "@/modules/hamtris/styles/Common";
 import { mergeStyles } from "@/common/utils/StyleUtils";
-import Footer from "@/modules/hamtris/components/Footer";
 
 const Initializer = () => {
   const { gameStore, stopwatchStore } = useContext(GameContext);
@@ -46,7 +45,6 @@ const GameView = () => {
           <Initializer />
           <Header />
           <BoardView />
-          <Footer />
         </div>
       </div>
     </GameContext.Provider>
