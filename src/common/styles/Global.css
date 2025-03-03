@@ -41,7 +41,7 @@
       radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
       radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
       radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%);
-    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+    background-size: 20% 20%, 40% 40%, 30% 30%, 40% 40%, 36% 36%, 20% 20%, 30% 30%, 20% 20%, 36% 36%;
   }
 
   .bubbles-setup::after {
@@ -53,7 +53,7 @@
       radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
       radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%),
       radial-gradient(circle, var(--bubbles-color) 20%, transparent 20%);
-    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
+    background-size: 30% 30%, 40% 40%, 36% 36%, 40% 40%, 30% 30%, 20% 20%, 40% 40%;
   }
 
   .bubbles-show:before {
